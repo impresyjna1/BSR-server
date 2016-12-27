@@ -19,14 +19,18 @@ public class Server {
 
     public static void main( String[] args ){
         try {
-            URI baseUri = UriBuilder.fromUri("http://" + Config.SERVER_ADDR).port(Config.SERVER_PORT_REST).build();
-            ResourceConfig config = new ResourceConfig();
-            serverInstance = GrizzlyHttpServerFactory.createHttpServer(baseUri, config, false);
+            initializeServerAndRESTPort();
             initializeSOAPServer();
             serverInstance.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void initializeServerAndRESTPort() {
+        URI baseUri = UriBuilder.fromUri("http://" + Config.SERVER_ADDR).port(Config.SERVER_PORT_REST).build();
+        ResourceConfig config = new ResourceConfig();
+        serverInstance = GrizzlyHttpServerFactory.createHttpServer(baseUri, config, false);
     }
 
     private static void initializeSOAPServer() {
