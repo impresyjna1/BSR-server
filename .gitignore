@@ -63,3 +63,4 @@ $RECYCLE.BIN/
 *.lnk
 
 .idea/libraries
+bank.db

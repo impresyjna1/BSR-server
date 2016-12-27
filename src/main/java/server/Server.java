@@ -1,5 +1,6 @@
 package server;
 
+import database.DatabaseHandler;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.NetworkListener;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
@@ -19,6 +20,7 @@ public class Server {
 
     public static void main( String[] args ){
         try {
+            DatabaseHandler.getInstance().initDatabase();
             initializeServerAndRESTPort();
             initializeSOAPServer();
             serverInstance.start();
@@ -26,7 +28,6 @@ public class Server {
             e.printStackTrace();
         }
     }
-
     private static void initializeServerAndRESTPort() {
         URI baseUri = UriBuilder.fromUri("http://" + Config.SERVER_ADDR).port(Config.SERVER_PORT_REST).build();
         ResourceConfig config = new ResourceConfig();
