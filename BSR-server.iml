@@ -60,5 +60,6 @@
     <orderEntry type="library" name="Maven: org.glassfish.web:javax.el:2.2.4" level="project" />
     <orderEntry type="library" name="Maven: org.glassfish.jersey.containers:jersey-container-grizzly2-http:2.22.2" level="project" />
     <orderEntry type="library" name="Maven: org.xerial:sqlite-jdbc:3.7.2" level="project" />
+    <orderEntry type="library" name="ormlite-2.10" level="project" />
   </component>
 </module>
