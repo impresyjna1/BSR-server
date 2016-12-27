@@ -2,6 +2,8 @@ package server;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.NetworkListener;
+import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
+import org.glassfish.jersey.server.ResourceConfig;
 import properties.Config;
 
 import javax.ws.rs.core.UriBuilder;
@@ -18,8 +20,8 @@ public class Server {
     public static void main( String[] args ){
         try {
             URI baseUri = UriBuilder.fromUri("http://" + Config.SERVER_ADDR).port(Config.SERVER_PORT_REST).build();
-            ResourceConfig config = new CustomResourceConfig();
-            server = GrizzlyHttpServerFactory.createHttpServer(baseUri, config, false);
+            ResourceConfig config = new ResourceConfig();
+            serverInstance = GrizzlyHttpServerFactory.createHttpServer(baseUri, config, false);
             initializeSOAPServer();
             serverInstance.start();
         } catch (IOException e) {
