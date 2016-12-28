@@ -48,6 +48,21 @@
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.7.2</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.j256.ormlite/ormlite-core -->
+        <dependency>
+            <groupId>com.j256.ormlite</groupId>
+            <artifactId>ormlite-core</artifactId>
+            <version>5.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.j256.ormlite/ormlite-jdbc -->
+        <dependency>
+            <groupId>com.j256.ormlite</groupId>
+            <artifactId>ormlite-jdbc</artifactId>
+            <version>5.0</version>
+        </dependency>
+
+
+
     </dependencies>
     
 </project>

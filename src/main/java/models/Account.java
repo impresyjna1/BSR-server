@@ -1,12 +1,22 @@
 package models;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 /**
  * Created by Impresyjna on 27.12.2016.
  */
+@DatabaseTable(tableName = "accounts")
 public class Account {
+    @DatabaseField(generatedId = true)
+    private int id;
+    @DatabaseField
     private String accountNumber;
+    @DatabaseField
     private int accountAmount;
+    @DatabaseField
     private boolean open;
+    @DatabaseField(canBeNull = false, foreign = true)
     private User owner;
 
     public Account() {
@@ -49,5 +59,13 @@ public class Account {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
