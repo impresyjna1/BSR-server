@@ -1,7 +1,14 @@
 package models;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTable;
+import database.DatabaseHandler;
+import javafx.scene.chart.PieChart;
+
+import java.sql.SQLException;
 
 /**
  * Created by Impresyjna on 27.12.2016.
@@ -22,10 +29,10 @@ public class Account {
     public Account() {
     }
 
-    public Account(String accountNumber, int accountAmount, boolean open, User owner) {
-        this.accountNumber = accountNumber;
-        this.accountAmount = accountAmount;
-        this.open = open;
+    public Account(User owner) {
+        this.accountNumber = generateAccountNo();
+        this.accountAmount = 0;
+        this.open = true;
         this.owner = owner;
     }
 
@@ -67,5 +74,31 @@ public class Account {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String generateAccountNo() {
+        DatabaseHandler databaseHandler = DatabaseHandler.getInstance();
+        try {
+            AccountCounter accountCounter = databaseHandler.getAccountCounterDao().queryForFirst(databaseHandler.getAccountCounterDao().queryBuilder().prepare());
+            System.out.println(accountCounter);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+//        Query<Counter> query = datastore.find(Counter.class, "id", "accountNoCounter");
+//        UpdateOperations<Counter> operation = datastore.createUpdateOperations(Counter.class).inc("seq");
+//        long count = datastore.findAndModify(query, operation).getSeq();
+//
+//        String accountNo = ConstantsUtil.BANK_ID + String.format("%016d", count);
+//
+//        String tmpNo = accountNo + "252100";
+//        String part1 = tmpNo.substring(0, 15);
+//        String part2 = tmpNo.substring(15);
+//        long rest1 = Long.parseLong(part1)%97;
+//        long rest2 = Long.parseLong(rest1 + part2)%97;
+//        long checkSum = 98 - rest2;
+//
+//        accountNo = String.format("%02d", checkSum) + accountNo;
+//        return accountNo;
+        return "";
     }
 }

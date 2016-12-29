@@ -5,10 +5,11 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import models.Account;
+import models.AccountCounter;
 import models.User;
 
 import java.io.IOException;
-import java.sql.*;
+import java.sql.SQLException;
 
 /**
  * Created by Impresyjna on 27.12.2016.
@@ -21,6 +22,7 @@ public class DatabaseHandler {
     ConnectionSource connectionSource;
     private Dao<Account,String> accountDao;
     private Dao<User,String> userDao;
+    private Dao<AccountCounter,String> accountCounterDao;
     private DatabaseHandler() {
     }
 
@@ -31,17 +33,34 @@ public class DatabaseHandler {
             connectionSource = new JdbcConnectionSource(databaseUrl);
             TableUtils.createTableIfNotExists(connectionSource, Account.class);
             TableUtils.createTableIfNotExists(connectionSource, User.class);
+            TableUtils.createTableIfNotExists(connectionSource, AccountCounter.class);
             // instantiate the DAO to handle Account with String id
             accountDao = DaoManager.createDao(connectionSource, Account.class);
             userDao = DaoManager.createDao(connectionSource, User.class);
-            User user = new User("Test", "test");
-            Account account = new Account("00", 0, true, user);
-            userDao.create(user);
-            accountDao.create(account);
+            accountCounterDao = DaoManager.createDao(connectionSource, AccountCounter.class);
+
+            AccountCounter accountCounter = new AccountCounter(5);
+            accountCounterDao.create(accountCounter);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         System.out.println("Opened database successfully");
+    }
+
+    public ConnectionSource getConnectionSource() {
+        return connectionSource;
+    }
+
+    public Dao<Account, String> getAccountDao() {
+        return accountDao;
+    }
+
+    public Dao<User, String> getUserDao() {
+        return userDao;
+    }
+
+    public Dao<AccountCounter, String> getAccountCounterDao() {
+        return accountCounterDao;
     }
 
     public void closeConnection() {

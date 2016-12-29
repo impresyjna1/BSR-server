@@ -61,4 +61,8 @@ public class DatabaseConfig {
 
         return accounts;
     }
+
+    public void initAccountCounter() {
+        //TODO: All inits here
+    }
 }
