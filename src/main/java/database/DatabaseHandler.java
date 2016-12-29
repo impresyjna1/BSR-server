@@ -39,8 +39,16 @@ public class DatabaseHandler {
             userDao = DaoManager.createDao(connectionSource, User.class);
             accountCounterDao = DaoManager.createDao(connectionSource, AccountCounter.class);
 
-            AccountCounter accountCounter = new AccountCounter(5);
-            accountCounterDao.create(accountCounter);
+            try {
+                AccountCounter accountCounter = accountCounterDao.queryForFirst(accountCounterDao.queryBuilder().prepare());
+                accountCounter.setAccountNumber(6);
+                System.out.println(accountCounter.getAccountNumber());
+                accountCounterDao.update(accountCounter);
+                accountCounter = accountCounterDao.queryForFirst(accountCounterDao.queryBuilder().prepare());
+                System.out.println(accountCounter.getAccountNumber());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
