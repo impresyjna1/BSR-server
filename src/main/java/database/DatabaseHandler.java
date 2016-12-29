@@ -31,6 +31,7 @@ public class DatabaseHandler {
             String databaseUrl = "jdbc:sqlite:bank.db";
             // create a connection source to our database
             connectionSource = new JdbcConnectionSource(databaseUrl);
+
             TableUtils.createTableIfNotExists(connectionSource, Account.class);
             TableUtils.createTableIfNotExists(connectionSource, User.class);
             TableUtils.createTableIfNotExists(connectionSource, AccountCounter.class);
@@ -39,16 +40,19 @@ public class DatabaseHandler {
             userDao = DaoManager.createDao(connectionSource, User.class);
             accountCounterDao = DaoManager.createDao(connectionSource, AccountCounter.class);
 
-            try {
-                AccountCounter accountCounter = accountCounterDao.queryForFirst(accountCounterDao.queryBuilder().prepare());
-                accountCounter.setAccountNumber(6);
-                System.out.println(accountCounter.getAccountNumber());
-                accountCounterDao.update(accountCounter);
-                accountCounter = accountCounterDao.queryForFirst(accountCounterDao.queryBuilder().prepare());
-                System.out.println(accountCounter.getAccountNumber());
-            } catch (SQLException e) {
-                e.printStackTrace();
+            if (accountDao.queryForAll().isEmpty()) {
+                System.out.println("Accounts empty");
             }
+//            try {
+//                AccountCounter accountCounter = accountCounterDao.queryForFirst(accountCounterDao.queryBuilder().prepare());
+//                accountCounter.setAccountNumber(6);
+//                System.out.println(accountCounter.getAccountNumber());
+//                accountCounterDao.update(accountCounter);
+//                accountCounter = accountCounterDao.queryForFirst(accountCounterDao.queryBuilder().prepare());
+//                System.out.println(accountCounter.getAccountNumber());
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

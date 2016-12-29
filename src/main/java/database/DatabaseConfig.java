@@ -1,8 +1,10 @@
 package database;
 
 import models.Account;
+import models.AccountCounter;
 import models.User;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -11,6 +13,8 @@ import java.util.ArrayList;
 public class DatabaseConfig {
     private ArrayList<User> users = new ArrayList<User>();
     private ArrayList<Account> accounts = new ArrayList<Account>();
+    private AccountCounter accountCounter;
+    DatabaseHandler databaseHandler = DatabaseHandler.getInstance();
 
     public ArrayList<User> getUsers() {
         User user1 = new User("Alicja", "Grzyb", "111111", "grzyb");
@@ -63,6 +67,20 @@ public class DatabaseConfig {
     }
 
     public void initAccountCounter() {
-        //TODO: All inits here
+        accountCounter = new AccountCounter(1);
+        try {
+            databaseHandler.getAccountCounterDao().create(accountCounter);
+        } catch (SQLException e) {
+            System.out.println("Account counter not initialized");
+        }
+    }
+
+    public void initDatabase() {
+        try {
+            databaseHandler.getUserDao().create(getUsers());
+        } catch (SQLException e) {
+            System.out.println("Users not initialized");
+        }
+
     }
 }
