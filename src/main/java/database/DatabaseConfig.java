@@ -82,5 +82,11 @@ public class DatabaseConfig {
             System.out.println("Users not initialized");
         }
 
+        try {
+            databaseHandler.getAccountDao().create(getAccounts());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }

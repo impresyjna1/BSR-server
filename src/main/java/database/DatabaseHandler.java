@@ -40,19 +40,13 @@ public class DatabaseHandler {
             userDao = DaoManager.createDao(connectionSource, User.class);
             accountCounterDao = DaoManager.createDao(connectionSource, AccountCounter.class);
 
-            if (accountDao.queryForAll().isEmpty()) {
-                System.out.println("Accounts empty");
+            if(accountCounterDao.queryForAll().isEmpty()) {
+                new DatabaseConfig().initAccountCounter();
             }
-//            try {
-//                AccountCounter accountCounter = accountCounterDao.queryForFirst(accountCounterDao.queryBuilder().prepare());
-//                accountCounter.setAccountNumber(6);
-//                System.out.println(accountCounter.getAccountNumber());
-//                accountCounterDao.update(accountCounter);
-//                accountCounter = accountCounterDao.queryForFirst(accountCounterDao.queryBuilder().prepare());
-//                System.out.println(accountCounter.getAccountNumber());
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
+
+            if (userDao.queryForAll().isEmpty()) {
+                new DatabaseConfig().initDatabase();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
