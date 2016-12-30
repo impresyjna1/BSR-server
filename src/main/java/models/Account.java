@@ -98,13 +98,6 @@ public class Account {
             e.printStackTrace();
         }
 
-//        Query<Counter> query = datastore.find(Counter.class, "id", "accountNoCounter");
-//        UpdateOperations<Counter> operation = datastore.createUpdateOperations(Counter.class).inc("seq");
-//        long count = datastore.findAndModify(query, operation).getSeq();
-//
-
-//
-//
         return "";
     }
 }

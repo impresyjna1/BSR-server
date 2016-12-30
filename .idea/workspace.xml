@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="55022d3c-8d3c-41a6-a072-9e2c8c7a405d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/models/Account.java" afterPath="$PROJECT_DIR$/src/main/java/models/Account.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/models/AccountCounter.java" afterPath="$PROJECT_DIR$/src/main/java/models/AccountCounter.java" />
     </list>
     <ignored path="BSR-server.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -54,8 +52,8 @@
       <file leaf-file-name="Account.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/models/Account.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="88" column="50" lean-forward="true" selection-start-line="88" selection-start-column="50" selection-end-line="88" selection-end-column="50" />
+            <state relative-caret-position="521">
+              <caret line="101" column="5" lean-forward="true" selection-start-line="101" selection-start-column="5" selection-end-line="101" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -765,12 +763,12 @@
       <workItem from="1482958619736" duration="15097000" />
       <workItem from="1483016799903" duration="438000" />
       <workItem from="1483017335235" duration="3326000" />
-      <workItem from="1483097568760" duration="3674000" />
+      <workItem from="1483097568760" duration="3688000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="38064000" />
+    <option name="totallyTimeSpent" value="38078000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1080" extended-state="0" />
@@ -1242,8 +1240,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/models/Account.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="88" column="50" lean-forward="true" selection-start-line="88" selection-start-column="50" selection-end-line="88" selection-end-column="50" />
+        <state relative-caret-position="521">
+          <caret line="101" column="5" lean-forward="true" selection-start-line="101" selection-start-column="5" selection-end-line="101" selection-end-column="5" />
           <folding />
         </state>
       </provider>
