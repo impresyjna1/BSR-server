@@ -35,4 +35,8 @@ public class AccountCounter {
     public void setAccountNumber(int accountNumber) {
         this.accountNumber = accountNumber;
     }
+
+    public void incrementNumber() {
+        accountNumber++;
+    }
 }
