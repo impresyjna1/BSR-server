@@ -6,6 +6,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import models.Account;
 import models.AccountCounter;
+import models.Session;
 import models.User;
 
 import java.io.IOException;
@@ -23,6 +24,7 @@ public class DatabaseHandler {
     private Dao<Account,String> accountDao;
     private Dao<User,String> userDao;
     private Dao<AccountCounter,String> accountCounterDao;
+    private Dao<Session, String> sessionDao;
     private DatabaseHandler() {
     }
 
@@ -35,10 +37,12 @@ public class DatabaseHandler {
             TableUtils.createTableIfNotExists(connectionSource, Account.class);
             TableUtils.createTableIfNotExists(connectionSource, User.class);
             TableUtils.createTableIfNotExists(connectionSource, AccountCounter.class);
+            TableUtils.createTableIfNotExists(connectionSource, Session.class);
             // instantiate the DAO to handle Account with String id
             accountDao = DaoManager.createDao(connectionSource, Account.class);
             userDao = DaoManager.createDao(connectionSource, User.class);
             accountCounterDao = DaoManager.createDao(connectionSource, AccountCounter.class);
+            sessionDao = DaoManager.createDao(connectionSource, Session.class);
 
             if(accountCounterDao.queryForAll().isEmpty()) {
                 new DatabaseConfig().initAccountCounter();
@@ -67,6 +71,10 @@ public class DatabaseHandler {
 
     public Dao<AccountCounter, String> getAccountCounterDao() {
         return accountCounterDao;
+    }
+
+    public Dao<Session, String> getSessionDao() {
+        return sessionDao;
     }
 
     public void closeConnection() {

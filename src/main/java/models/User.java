@@ -20,7 +20,7 @@ public class User {
     @DatabaseField
     private String surname;
     @DatabaseField
-    private String userNumber;
+    private String clientNumber;
     @DatabaseField
     private String password;
     @ForeignCollectionField(eager = false)
@@ -29,10 +29,10 @@ public class User {
     public User() {
     }
 
-    public User(String name, String surname, String userNumber, String password) {
+    public User(String name, String surname, String clientNumber, String password) {
         this.name = name;
         this.surname = surname;
-        this.userNumber = userNumber;
+        this.clientNumber = clientNumber;
         this.password = hashPassword(password);
     }
 
@@ -68,12 +68,12 @@ public class User {
         this.accounts = accounts;
     }
 
-    public String getUserNumber() {
-        return userNumber;
+    public String getClientNumber() {
+        return clientNumber;
     }
 
-    public void setUserNumber(String userNumber) {
-        this.userNumber = userNumber;
+    public void setClientNumber(String userNumber) {
+        this.clientNumber = clientNumber;
     }
 
     public String getPassword() {
