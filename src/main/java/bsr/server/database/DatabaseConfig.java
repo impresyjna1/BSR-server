@@ -1,8 +1,8 @@
-package database;
+package bsr.server.database;
 
-import models.Account;
-import models.AccountCounter;
-import models.User;
+import bsr.server.models.Account;
+import bsr.server.models.AccountCounter;
+import bsr.server.models.User;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

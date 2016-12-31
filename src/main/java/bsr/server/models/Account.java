@@ -1,13 +1,10 @@
-package models;
+package bsr.server.models;
 
+import bsr.server.database.DatabaseHandler;
+import bsr.server.properties.Config;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.stmt.PreparedQuery;
-import com.j256.ormlite.stmt.QueryBuilder;
-import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTable;
-import database.DatabaseHandler;
-import javafx.scene.chart.PieChart;
-import properties.Config;
+
 
 import java.sql.SQLException;
 

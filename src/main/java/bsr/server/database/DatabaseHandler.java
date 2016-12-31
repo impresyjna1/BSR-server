@@ -1,13 +1,13 @@
-package database;
+package bsr.server.database;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import models.Account;
-import models.AccountCounter;
-import models.Session;
-import models.User;
+import bsr.server.models.Account;
+import bsr.server.models.AccountCounter;
+import bsr.server.models.Session;
+import bsr.server.models.User;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -31,7 +31,7 @@ public class DatabaseHandler {
     public void initDatabase() {
         try {
             String databaseUrl = "jdbc:sqlite:bank.db";
-            // create a connection source to our database
+            // create a connection source to our bsr.server.database
             connectionSource = new JdbcConnectionSource(databaseUrl);
 
             TableUtils.createTableIfNotExists(connectionSource, Account.class);
@@ -54,7 +54,7 @@ public class DatabaseHandler {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("Opened database successfully");
+        System.out.println("Opened bsr.server.database successfully");
     }
 
     public ConnectionSource getConnectionSource() {

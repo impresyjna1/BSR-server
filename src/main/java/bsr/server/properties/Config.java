@@ -1,4 +1,4 @@
-package properties;
+package bsr.server.properties;
 
 /**
  * Created by Impresyjna on 27.12.2016.

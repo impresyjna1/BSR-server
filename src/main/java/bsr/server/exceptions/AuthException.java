@@ -1,4 +1,4 @@
-package exceptions;
+package bsr.server.exceptions;
 
 /**
  * Created by Asia on 30.12.2016.

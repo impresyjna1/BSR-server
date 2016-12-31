@@ -1,4 +1,4 @@
-package models;
+package bsr.server.models;
 
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;

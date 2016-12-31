@@ -1,11 +1,11 @@
-package innerServices;
+package bsr.server;
 
-import database.DatabaseHandler;
-import exceptions.AuthException;
-import exceptions.NotValidException;
-import exceptions.ServerException;
-import models.Session;
-import models.User;
+import bsr.server.database.DatabaseHandler;
+import bsr.server.exceptions.AuthException;
+import bsr.server.exceptions.NotValidException;
+import bsr.server.exceptions.ServerException;
+import bsr.server.models.Session;
+import bsr.server.models.User;
 
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
