@@ -35,7 +35,10 @@ public class UserService {
 
         User user = null;
         try {
-            user = databaseHandler.getUserDao().queryForFieldValues(userParamsMap).get(0);
+            List<User> users = databaseHandler.getUserDao().queryForFieldValues(userParamsMap);
+            if (users.size() > 0) {
+                user = users.get(0);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
