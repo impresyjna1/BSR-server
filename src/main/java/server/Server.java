@@ -1,5 +1,6 @@
 package server;
 
+import bsr.server.innerServices.AccountService;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import bsr.server.database.DatabaseHandler;
 import bsr.server.innerServices.UserService;
@@ -41,7 +42,7 @@ public class Server {
     private static void initializeSOAPServer() {
         NetworkListener networkListener = new NetworkListener("jaxws-listener", "0.0.0.0", Config.SERVER_PORT_SOAP);
         serverInstance.getServerConfiguration().addHttpHandler(new JaxwsHandler(new UserService()), "/users");
-//        serverInstance.getServerConfiguration().addHttpHandler(new JaxwsHandler(new BankAccountService()), "/bankAccounts");
+        serverInstance.getServerConfiguration().addHttpHandler(new JaxwsHandler(new AccountService()), "/accounts");
 //        serverInstance.getServerConfiguration().addHttpHandler(new JaxwsHandler(new BankOperationService()), "/bankOperations");
         serverInstance.addListener(networkListener);
     }

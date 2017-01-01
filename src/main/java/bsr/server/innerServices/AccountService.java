@@ -30,15 +30,26 @@ public class AccountService {
 
 
     @WebMethod
-    public List<Account> getAccounts() throws SQLException, SessionException, UserException {
-        final User user = AuthSessionFromDatabaseUtil.getUserFromWebServiceContext(context);
-        Map<String, Object> queryParams = new HashMap<String, Object>() {{
-            put("owner_id", user.getId());
-        }};
-        List<Account> accounts = databaseHandler.getAccountDao().queryForFieldValues(queryParams);
-        for(Account account: accounts) {
-            System.out.println(account.getAccountNumber());
+    public List<Account> getAccounts() throws SessionException, UserException {
+        User user = null;
+        try {
+            user = AuthSessionFromDatabaseUtil.getUserFromWebServiceContext(context);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return getAccounts();
+        if (user != null) {
+            final User finalUser = user;
+            Map<String, Object> queryParams = new HashMap<String, Object>() {{
+                put("owner_id", finalUser.getId());
+            }};
+            List<Account> accounts = null;
+            try {
+                accounts = databaseHandler.getAccountDao().queryForFieldValues(queryParams);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return accounts;
+        }
+        return null;
     }
 }
