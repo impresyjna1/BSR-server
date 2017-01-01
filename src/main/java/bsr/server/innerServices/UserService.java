@@ -1,4 +1,4 @@
-package bsr.server;
+package bsr.server.innerServices;
 
 import bsr.server.database.DatabaseHandler;
 import bsr.server.exceptions.AuthException;
@@ -56,24 +56,8 @@ public class UserService {
         }
     }
 
-    public void getAllUsers() {
-
-    }
-
     public void getUser() {
-
-    }
-
-    public void createUser() {
-
-    }
-
-    public void updateUser() {
-
-    }
-
-    public void deleteUser() {
-
+        // TODO: To get data about user to show in client
     }
 
     private void validateParams(Map<String, Object> paramsMap) throws NotValidException {

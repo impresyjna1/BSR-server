@@ -2,7 +2,7 @@ package server;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import bsr.server.database.DatabaseHandler;
-import bsr.server.UserService;
+import bsr.server.innerServices.UserService;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.grizzly.http.server.NetworkListener;
 import org.glassfish.grizzly.jaxws.JaxwsHandler;
