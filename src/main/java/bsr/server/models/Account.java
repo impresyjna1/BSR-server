@@ -1,8 +1,11 @@
 package bsr.server.models;
 
 import bsr.server.database.DatabaseHandler;
+import bsr.server.models.accountOperations.Operation;
 import bsr.server.properties.Config;
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 
@@ -23,6 +26,8 @@ public class Account {
     private boolean open;
     @DatabaseField(canBeNull = false, foreign = true)
     private User owner;
+    @ForeignCollectionField(eager = false)
+    ForeignCollection<Operation> history;
 
     public Account() {
     }
@@ -96,5 +101,9 @@ public class Account {
         }
 
         return "";
+    }
+
+    public void addBankOperation(Operation operation) {
+        history.add(operation);
     }
 }
