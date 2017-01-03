@@ -6,9 +6,17 @@ import bsr.server.models.User;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
+
 /**
  * Created by Impresyjna on 01.01.2017.
  */
+@XmlSeeAlso({Deposit.class})
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "operation")
 @DatabaseTable(tableName = "operations")
 public abstract class Operation {
     @DatabaseField(generatedId = true)

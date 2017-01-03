@@ -59,8 +59,8 @@ public class AccountService {
 
     @WebMethod
     public Operation depositMoney(@WebParam(name = "title") @XmlElement(required = true) final String title,
-                                  @WebParam(name = "amount") @XmlElement(required = true) final double amount,
-                                  @WebParam(name = "targetAccountNumber") @XmlElement(required = true) final String targetAccountNumber) throws NotValidException, ServerException, AccountServiceException {
+                                  @WebParam(name = "amount") @XmlElement(required = true) final String amount,
+                                  @WebParam(name = "targetAccountNumber") @XmlElement(required = true) final String targetAccountNumber) throws NotValidException, ServerException, AccountServiceException, OperationException {
         Map<String, Object> parametersMap = new HashMap<String, Object>() {{
             put("title", title);
             put("amount", amount);
@@ -86,20 +86,14 @@ public class AccountService {
             e.printStackTrace();
             throw new AccountServiceException("Source bank account does not exist");
         }
-        Deposit deposit = new Deposit(title, (int) (amount*100), targetAccountNumber);
-
-        if(targetAccountNo.substring(2, 10).equals(ConstantsUtil.BANK_ID)) {
-            BankAccount targetBankAccount = datastore.find(BankAccount.class).field("accountNo").equal(targetAccountNo).get();
-            if(targetBankAccount == null) {
-                throw new BankServiceException("Target bank account does not exist");
-            }
-            Transfer inTransfer = new Transfer(title, amount, sourceAccountNo, targetAccountNo, Transfer.TransferDirection.IN);
-            makeInternalTransfer(datastore, sourceBankAccount, targetBankAccount, inTransfer, outTransfer);
-        } else {
-            makeExternalTransfer(datastore, sourceBankAccount, outTransfer);
+        Deposit deposit = new Deposit(title, (int) (Double.parseDouble(amount)*100), targetAccountNumber);
+        deposit.doOperation(targetAccount);
+        try {
+            databaseHandler.getAccountDao().update(targetAccount);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-        return outTransfer;
+        return deposit;
     }
 
     private void validateParams(Map<String, Object> paramsMap) throws NotValidException {
@@ -112,7 +106,7 @@ public class AccountService {
                 }
             } else if(param.getKey() == "amount") {
                 try {
-                    int amount = Integer.parseInt(String.valueOf(param));
+                    double amount = Double.parseDouble(String.valueOf(param));
                     if(amount<=0) {
                         exceptionMessage += param.getKey() + " ";
                     }

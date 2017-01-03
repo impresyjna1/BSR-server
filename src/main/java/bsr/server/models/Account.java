@@ -9,11 +9,14 @@ import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 
+import javax.xml.bind.annotation.XmlSeeAlso;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * Created by Impresyjna on 27.12.2016.
  */
+@XmlSeeAlso({Operation.class})
 @DatabaseTable(tableName = "accounts")
 public class Account {
     @DatabaseField(generatedId = true)
