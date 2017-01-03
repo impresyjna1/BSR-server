@@ -1,4 +1,5 @@
 package bsr.server.database;
+import bsr.server.models.accountOperations.Operation;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
@@ -25,6 +26,7 @@ public class DatabaseHandler {
     private Dao<User,String> userDao;
     private Dao<AccountCounter,String> accountCounterDao;
     private Dao<Session, String> sessionDao;
+    private Dao<Operation, String> operationDao;
     private DatabaseHandler() {
     }
 
@@ -33,12 +35,13 @@ public class DatabaseHandler {
             String databaseUrl = "jdbc:sqlite:bank.db";
             // create a connection source to our bsr.server.database
             connectionSource = new JdbcConnectionSource(databaseUrl);
-
+            TableUtils.createTableIfNotExists(connectionSource, Operation.class);
             TableUtils.createTableIfNotExists(connectionSource, Account.class);
             TableUtils.createTableIfNotExists(connectionSource, User.class);
             TableUtils.createTableIfNotExists(connectionSource, AccountCounter.class);
             TableUtils.createTableIfNotExists(connectionSource, Session.class);
-            // instantiate the DAO to handle Account with String id
+
+            operationDao = DaoManager.createDao(connectionSource, Operation.class);
             accountDao = DaoManager.createDao(connectionSource, Account.class);
             userDao = DaoManager.createDao(connectionSource, User.class);
             accountCounterDao = DaoManager.createDao(connectionSource, AccountCounter.class);

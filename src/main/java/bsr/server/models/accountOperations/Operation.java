@@ -2,6 +2,7 @@ package bsr.server.models.accountOperations;
 
 import bsr.server.exceptions.OperationException;
 import bsr.server.models.Account;
+import bsr.server.models.User;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -24,6 +25,8 @@ public abstract class Operation {
     protected String targetAccountNumber;
     @DatabaseField(canBeNull = false)
     protected String operationClassName;
+    @DatabaseField(canBeNull = false, foreign = true)
+    private Account operationAccount;
 
     public Operation() {
     }
@@ -100,6 +103,14 @@ public abstract class Operation {
 
         execute(account);
         executed = true;
+    }
+
+    public Account getOperationAccount() {
+        return operationAccount;
+    }
+
+    public void setOperationAccount(Account operationAccount) {
+        this.operationAccount = operationAccount;
     }
 
     protected abstract void execute(Account account) throws OperationException;

@@ -27,7 +27,7 @@ public class Account {
     @DatabaseField(canBeNull = false, foreign = true)
     private User owner;
     @ForeignCollectionField(eager = false)
-    ForeignCollection<Operation> history;
+    ForeignCollection<Operation> operations;
 
     public Account() {
     }
@@ -79,6 +79,14 @@ public class Account {
         this.id = id;
     }
 
+    public ForeignCollection<Operation> getOperations() {
+        return operations;
+    }
+
+    public void setOperations(ForeignCollection<Operation> operations) {
+        this.operations = operations;
+    }
+
     public String generateAccountNo() {
         DatabaseHandler databaseHandler = DatabaseHandler.getInstance();
         try {
@@ -104,6 +112,6 @@ public class Account {
     }
 
     public void addBankOperation(Operation operation) {
-        history.add(operation);
+        operations.add(operation);
     }
 }

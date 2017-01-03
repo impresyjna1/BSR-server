@@ -2,11 +2,12 @@ package bsr.server.innerServices;
 
 import bsr.server.database.AuthSessionFromDatabaseUtil;
 import bsr.server.database.DatabaseHandler;
-import bsr.server.exceptions.SessionException;
-import bsr.server.exceptions.UserException;
+import bsr.server.exceptions.*;
 import bsr.server.models.Account;
 import bsr.server.models.User;
+import bsr.server.models.accountOperations.Deposit;
 import bsr.server.models.accountOperations.Operation;
+import com.j256.ormlite.stmt.PreparedQuery;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
@@ -59,26 +60,33 @@ public class AccountService {
     @WebMethod
     public Operation depositMoney(@WebParam(name = "title") @XmlElement(required = true) final String title,
                                   @WebParam(name = "amount") @XmlElement(required = true) final double amount,
-                                  @WebParam(name = "targetAccountNumber") @XmlElement(required = true) final String targetAccountNumber) {
+                                  @WebParam(name = "targetAccountNumber") @XmlElement(required = true) final String targetAccountNumber) throws NotValidException, ServerException, AccountServiceException {
         Map<String, Object> parametersMap = new HashMap<String, Object>() {{
             put("title", title);
             put("amount", amount);
             put("receiver account no", targetAccountNumber);
         }};
-        ValidateParamsUtil.validate(parametersMap);
+        validateParams(parametersMap);
 
-        Datastore datastore = DataStoreHandlerUtil.getInstance().getDataStore();
-        User user = AuthUtil.getUserFromWebServiceContext(context, datastore);
-
-        BankAccount sourceBankAccount = datastore.find(BankAccount.class).field("accountNo").equal(sourceAccountNo).get();
-        if(sourceBankAccount == null) {
-            throw new BankServiceException("Source bank account does not exist");
+        User user = null;
+        try {
+            user = AuthSessionFromDatabaseUtil.getUserFromWebServiceContext(context);
+        } catch (UserException | SessionException | SQLException e) {
+            e.printStackTrace();
         }
-        if(!user.containsBankAccount(sourceAccountNo)) {
-            throw new BankServiceException("Source account does not belong to user");
+        Account targetAccount = null;
+        try {
+            final User finalUser = user;
+            Map<String, Object> accountParams = new HashMap<String, Object>() {{
+                put("owner_id", finalUser.getId());
+                put("accountNumber", targetAccountNumber);
+            }};
+            targetAccount = databaseHandler.getAccountDao().queryForFieldValues(accountParams).get(0);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new AccountServiceException("Source bank account does not exist");
         }
-
-        Transfer outTransfer = new Transfer(title, amount, sourceAccountNo, targetAccountNo, Transfer.TransferDirection.OUT);
+        Deposit deposit = new Deposit(title, (int) (amount*100), targetAccountNumber);
 
         if(targetAccountNo.substring(2, 10).equals(ConstantsUtil.BANK_ID)) {
             BankAccount targetBankAccount = datastore.find(BankAccount.class).field("accountNo").equal(targetAccountNo).get();
@@ -92,5 +100,31 @@ public class AccountService {
         }
 
         return outTransfer;
+    }
+
+    private void validateParams(Map<String, Object> paramsMap) throws NotValidException {
+        String exceptionMessage = "";
+        for(Map.Entry<String, Object> param: paramsMap.entrySet()) {
+            if(param.getValue() instanceof String) {
+                String value = (String)param.getValue();
+                if(value.length() == 0) {
+                    exceptionMessage += param.getKey() + " ";
+                }
+            } else if(param.getKey() == "amount") {
+                try {
+                    int amount = Integer.parseInt(String.valueOf(param));
+                    if(amount<=0) {
+                        exceptionMessage += param.getKey() + " ";
+                    }
+                } catch (Exception e) {
+                    exceptionMessage += param.getKey() + " ";
+                }
+            }
+        }
+
+        if(exceptionMessage.length() > 0) {
+            exceptionMessage += " is missing or is invalid";
+            throw new NotValidException(exceptionMessage);
+        }
     }
 }
