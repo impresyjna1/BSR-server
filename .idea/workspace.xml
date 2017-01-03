@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="55022d3c-8d3c-41a6-a072-9e2c8c7a405d" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/bsr/server/exceptions/OperationException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/bsr/server/models/accountOperations/Deposit.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/bsr/server/models/accountOperations/Operation.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/bsr/server/models/Account.java" afterPath="$PROJECT_DIR$/src/main/java/bsr/server/models/Account.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/bsr/server/innerServices/AccountService.java" afterPath="$PROJECT_DIR$/src/main/java/bsr/server/innerServices/AccountService.java" />
     </list>
     <ignored path="BSR-server.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,11 +25,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="AccountService.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="AccountService.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/bsr/server/innerServices/AccountService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="413">
-              <caret line="44" column="38" lean-forward="false" selection-start-line="44" selection-start-column="38" selection-end-line="44" selection-end-column="38" />
+            <state relative-caret-position="188">
+              <caret line="67" column="21" lean-forward="false" selection-start-line="67" selection-start-column="21" selection-end-line="67" selection-end-column="21" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -117,7 +113,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Deposit.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Deposit.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/bsr/server/models/accountOperations/Deposit.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="270">
@@ -174,12 +170,12 @@
         <option value="$PROJECT_DIR$/src/main/java/bsr/server/exceptions/SessionException.java" />
         <option value="$PROJECT_DIR$/src/main/java/bsr/server/database/AuthSessionFromDatabaseUtil.java" />
         <option value="$PROJECT_DIR$/src/main/java/server/Server.java" />
-        <option value="$PROJECT_DIR$/src/main/java/bsr/server/innerServices/AccountService.java" />
         <option value="$PROJECT_DIR$/src/main/java/bsr/server/models/Operation.java" />
         <option value="$PROJECT_DIR$/src/main/java/bsr/server/exceptions/OperationException.java" />
         <option value="$PROJECT_DIR$/src/main/java/bsr/server/models/accountOperations/Operation.java" />
         <option value="$PROJECT_DIR$/src/main/java/bsr/server/models/accountOperations/Deposit.java" />
         <option value="$PROJECT_DIR$/src/main/java/bsr/server/models/Account.java" />
+        <option value="$PROJECT_DIR$/src/main/java/bsr/server/innerServices/AccountService.java" />
       </list>
     </option>
   </component>
@@ -379,36 +375,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="innerServices" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="BSR-server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="BSR-server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="exceptions" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -931,12 +897,12 @@
       <workItem from="1483016799903" duration="438000" />
       <workItem from="1483017335235" duration="3326000" />
       <workItem from="1483097568760" duration="22211000" />
-      <workItem from="1483188323683" duration="17844000" />
+      <workItem from="1483188323683" duration="18858000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="74445000" />
+    <option name="totallyTimeSpent" value="75459000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1080" extended-state="0" />
@@ -1446,25 +1412,15 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/bsr/server/innerServices/AccountService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="413">
-          <caret line="44" column="38" lean-forward="false" selection-start-line="44" selection-start-column="38" selection-end-line="44" selection-end-column="38" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/bsr/server/exceptions/OperationException.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
           <caret line="9" column="0" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
           <folding>
-            <element signature="e#164#165#0" expanded="true" />
-            <element signature="e#187#188#0" expanded="true" />
-            <element signature="e#236#237#0" expanded="true" />
-            <element signature="e#266#267#0" expanded="true" />
+            <element signature="e#164#165#0" expanded="false" />
+            <element signature="e#187#188#0" expanded="false" />
+            <element signature="e#236#237#0" expanded="false" />
+            <element signature="e#266#267#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1541,6 +1497,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
           <caret line="18" column="25" lean-forward="true" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/bsr/server/innerServices/AccountService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="188">
+          <caret line="67" column="21" lean-forward="false" selection-start-line="67" selection-start-column="21" selection-end-line="67" selection-end-column="21" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
