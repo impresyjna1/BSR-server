@@ -64,3 +64,7 @@ $RECYCLE.BIN/
 
 .idea/libraries
 bank.db
+*.iml
+/target
+/.idea
+/out
