@@ -4,9 +4,12 @@ import bsr.server.exceptions.OperationException;
 import bsr.server.models.Account;
 import com.j256.ormlite.table.DatabaseTable;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * Created by Impresyjna on 01.01.2017.
  */
+@XmlRootElement(name = "deposit")
 @DatabaseTable(tableName = "deposits")
 public class Deposit extends Operation {
 
