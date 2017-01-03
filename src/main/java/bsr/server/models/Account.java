@@ -9,6 +9,8 @@ import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 
+import javax.xml.bind.annotation.XmlElementRef;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -82,6 +84,8 @@ public class Account {
         this.id = id;
     }
 
+    @XmlElementWrapper(name="operations")
+    @XmlElementRef()
     public ForeignCollection<Operation> getOperations() {
         return operations;
     }
