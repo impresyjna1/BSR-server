@@ -1,30 +1,35 @@
 package bsr.server.models;
 
-import com.j256.ormlite.dao.ForeignCollection;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
-import com.j256.ormlite.table.DatabaseTable;
+import org.bson.types.ObjectId;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Indexed;
+import org.mongodb.morphia.annotations.Reference;
 
+import javax.validation.constraints.NotNull;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by Impresyjna on 27.12.2016.
  */
-@DatabaseTable(tableName = "users")
+@Entity("users")
 public class User {
-    @DatabaseField(generatedId = true)
-    private int id;
-    @DatabaseField
+    @Id
+    private ObjectId id;
+    @NotNull
     private String name;
-    @DatabaseField
+    @NotNull
     private String surname;
-    @DatabaseField
+    @NotNull
+    @Indexed(name = "clientNumber", unique = true)
     private String clientNumber;
-    @DatabaseField
+    @NotNull
     private String password;
-    @ForeignCollectionField(eager = false)
-    ForeignCollection<Account> accounts;
+    @Reference
+    private List<Account> accounts;
 
     public User() {
     }
@@ -36,11 +41,11 @@ public class User {
         this.password = hashPassword(password);
     }
 
-    public int getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
@@ -60,19 +65,11 @@ public class User {
         this.surname = surname;
     }
 
-    public ForeignCollection<Account> getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(ForeignCollection<Account> accounts) {
-        this.accounts = accounts;
-    }
-
     public String getClientNumber() {
         return clientNumber;
     }
 
-    public void setClientNumber(String userNumber) {
+    public void setClientNumber(String clientNumber) {
         this.clientNumber = clientNumber;
     }
 
@@ -82,6 +79,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Account> getAccounts() {
+        return Collections.unmodifiableList(accounts);
+    }
+
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
     }
 
     private String hashPassword(String password) {

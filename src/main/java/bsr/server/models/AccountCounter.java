@@ -2,29 +2,30 @@ package bsr.server.models;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.bson.types.ObjectId;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by Impresyjna on 29.12.2016.
  */
-@DatabaseTable(tableName = "accounts_counter")
+@Entity("accounts_counter")
 public class AccountCounter {
-    @DatabaseField(generatedId = true)
-    private int id;
-    @DatabaseField
-    private int accountNumber;
+    @Id
+    private ObjectId id;
+    @NotNull
+    private int accountNumber = 0;
 
     public AccountCounter() {
     }
 
-    public AccountCounter(int accountNumber) {
-        this.accountNumber = accountNumber;
-    }
-
-    public int getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
@@ -40,3 +41,4 @@ public class AccountCounter {
         accountNumber++;
     }
 }
+

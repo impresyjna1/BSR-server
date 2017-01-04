@@ -17,7 +17,6 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 @XmlSeeAlso({Deposit.class})
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "operation")
-@DatabaseTable(tableName = "operations")
 public abstract class Operation {
     @DatabaseField(generatedId = true)
     protected int id;
@@ -34,7 +33,7 @@ public abstract class Operation {
     @DatabaseField(canBeNull = false)
     protected String operationClassName;
     @DatabaseField(canBeNull = false, foreign = true)
-    private Account account;
+    protected Account account;
 
     public Operation() {
     }

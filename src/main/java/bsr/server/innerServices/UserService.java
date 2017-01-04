@@ -6,6 +6,7 @@ import bsr.server.exceptions.NotValidException;
 import bsr.server.exceptions.ServerException;
 import bsr.server.models.Session;
 import bsr.server.models.User;
+import org.mongodb.morphia.Datastore;
 
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -22,7 +23,8 @@ import java.util.*;
 @BindingType(value = javax.xml.ws.soap.SOAPBinding.SOAP12HTTP_BINDING)
 public class UserService {
 
-    DatabaseHandler databaseHandler = DatabaseHandler.getInstance();
+    Datastore mongoDataStore = DatabaseHandler.getInstance().getMongoDataStore();
+
     @WebMethod
     public int login(@WebParam(name = "clientNumber") @XmlElement(required = true) final String clientNumber,
                         @WebParam(name = "password") @XmlElement(required = true) final String password)
@@ -33,27 +35,24 @@ public class UserService {
         }};
         validateParams(userParamsMap);
 
-        User user = null;
-        try {
-            List<User> users = databaseHandler.getUserDao().queryForFieldValues(userParamsMap);
-            if (users.size() > 0) {
-                user = users.get(0);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+        User user = mongoDataStore.find(User.class)
+                .field("clientNumber").equal(clientNumber)
+                .field("password").equal(password)
+                .get();
         if(user == null) {
             throw new AuthException("Bad auth");
-        } else {
-            Session session = new Session(user);
-            try {
-                databaseHandler.getSessionDao().create(session);
-            } catch (SQLException e) {
-                throw new ServerException("Can not init session");
-            }
-            return session.getId();
         }
+        //TODO:
+//        else {
+//            Session session = new Session(user);
+//            try {
+//                databaseHandler.getSessionDao().create(session);
+//            } catch (SQLException e) {
+//                throw new ServerException("Can not init session");
+//            }
+//            return session.getId();
+//        }
+            return 0;
     }
 
     public void getUser() {

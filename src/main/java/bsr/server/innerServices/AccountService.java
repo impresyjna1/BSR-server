@@ -35,26 +35,27 @@ public class AccountService {
 
     @WebMethod
     public List<Account> getAccounts() throws SessionException, UserException {
-        User user = null;
-        try {
-            user = AuthSessionFromDatabaseUtil.getUserFromWebServiceContext(context);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        if (user != null) {
-            final User finalUser = user;
-            Map<String, Object> queryParams = new HashMap<String, Object>() {{
-                put("owner_id", finalUser.getId());
-            }};
-            List<Account> accounts = null;
-            try {
-                accounts = databaseHandler.getAccountDao().queryForFieldValues(queryParams);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            System.out.println(accounts.size());
-            return accounts;
-        }
+        //TODO:
+//        User user = null;
+//        try {
+//            user = AuthSessionFromDatabaseUtil.getUserFromWebServiceContext(context);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        if (user != null) {
+//            final User finalUser = user;
+//            Map<String, Object> queryParams = new HashMap<String, Object>() {{
+//                put("owner_id", finalUser.getId());
+//            }};
+//            List<Account> accounts = null;
+//            try {
+//                accounts = databaseHandler.getAccountDao().queryForFieldValues(queryParams);
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//            System.out.println(accounts.size());
+//            return accounts;
+//        }
         return null;
     }
 
@@ -62,39 +63,36 @@ public class AccountService {
     public Operation depositMoney(@WebParam(name = "title") @XmlElement(required = true) final String title,
                                   @WebParam(name = "amount") @XmlElement(required = true) final String amount,
                                   @WebParam(name = "targetAccountNumber") @XmlElement(required = true) final String targetAccountNumber) throws NotValidException, ServerException, AccountServiceException, OperationException {
-        Map<String, Object> parametersMap = new HashMap<String, Object>() {{
-            put("title", title);
-            put("amount", amount);
-            put("receiver account no", targetAccountNumber);
-        }};
-        validateParams(parametersMap);
-
-        User user = null;
-        try {
-            user = AuthSessionFromDatabaseUtil.getUserFromWebServiceContext(context);
-        } catch (UserException | SessionException | SQLException e) {
-            e.printStackTrace();
-        }
-        Account targetAccount = null;
-        try {
-            final User finalUser = user;
-            Map<String, Object> accountParams = new HashMap<String, Object>() {{
-                put("owner_id", finalUser.getId());
-                put("accountNumber", targetAccountNumber);
-            }};
-            targetAccount = databaseHandler.getAccountDao().queryForFieldValues(accountParams).get(0);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new AccountServiceException("Source bank account does not exist");
-        }
-        Deposit deposit = new Deposit(title, (int) (Double.parseDouble(amount)*100), targetAccountNumber);
-        deposit.doOperation(targetAccount);
-        try {
-            databaseHandler.getAccountDao().update(targetAccount);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return deposit;
+//  TODO:
+// Map<String, Object> parametersMap = new HashMap<String, Object>() {{
+//            put("title", title);
+//            put("amount", amount);
+//            put("receiver account no", targetAccountNumber);
+//        }};
+//        validateParams(parametersMap);
+//
+//        User user = null;
+//        try {
+//            user = AuthSessionFromDatabaseUtil.getUserFromWebServiceContext(context);
+//        } catch (UserException | SessionException | SQLException e) {
+//            e.printStackTrace();
+//        }
+//        Account targetAccount = null;
+//        try {
+//            final User finalUser = user;
+//            Map<String, Object> accountParams = new HashMap<String, Object>() {{
+//                put("owner_id", finalUser.getId());
+//                put("accountNumber", targetAccountNumber);
+//            }};
+//            targetAccount = databaseHandler.getAccountDao().queryForFieldValues(accountParams).get(0);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            throw new AccountServiceException("Source bank account does not exist");
+//        }
+//        Deposit deposit = new Deposit(title, (int) (Double.parseDouble(amount)*100), targetAccountNumber);
+//        deposit.doOperation(targetAccount);
+//        return deposit;
+        return null;
     }
 
     private void validateParams(Map<String, Object> paramsMap) throws NotValidException {

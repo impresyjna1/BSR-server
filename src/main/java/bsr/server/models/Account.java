@@ -37,9 +37,6 @@ public class Account {
     ForeignCollection<Operation> operations;
 
     public Account() {
-        if(operations == null) {
-            operations = new Iterators.Array<Operation>();
-        }
     }
 
     public Account(User owner) {
@@ -100,25 +97,26 @@ public class Account {
     }
 
     public String generateAccountNo() {
-        DatabaseHandler databaseHandler = DatabaseHandler.getInstance();
-        try {
-            AccountCounter accountCounter = databaseHandler.getAccountCounterDao().queryForFirst(databaseHandler.getAccountCounterDao().queryBuilder().prepare());
-            accountCounter.incrementNumber();
-            String accountNo = Config.BANK_ID + String.format("%016d", accountCounter.getAccountNumber());
-            String tmpNo = accountNo + "101100";
-            String part1 = tmpNo.substring(0, 15);
-            String part2 = tmpNo.substring(15);
-            long rest1 = Long.parseLong(part1)%97;
-            long rest2 = Long.parseLong(rest1 + part2)%97;
-            long checkSum = 98 - rest2;
-
-            accountNo = String.format("%02d", checkSum) + accountNo;
-            System.out.println(accountNo);
-            databaseHandler.getAccountCounterDao().update(accountCounter);
-            return accountNo;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        //TODO:
+//        DatabaseHandler databaseHandler = DatabaseHandler.getInstance();
+//        try {
+//            AccountCounter accountCounter = databaseHandler.getAccountCounterDao().queryForFirst(databaseHandler.getAccountCounterDao().queryBuilder().prepare());
+//            accountCounter.incrementNumber();
+//            String accountNo = Config.BANK_ID + String.format("%016d", accountCounter.getAccountNumber());
+//            String tmpNo = accountNo + "101100";
+//            String part1 = tmpNo.substring(0, 15);
+//            String part2 = tmpNo.substring(15);
+//            long rest1 = Long.parseLong(part1)%97;
+//            long rest2 = Long.parseLong(rest1 + part2)%97;
+//            long checkSum = 98 - rest2;
+//
+//            accountNo = String.format("%02d", checkSum) + accountNo;
+//            System.out.println(accountNo);
+//            databaseHandler.getAccountCounterDao().update(accountCounter);
+//            return accountNo;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 
         return "";
     }

@@ -1,18 +1,31 @@
 package bsr.server.models;
 
+import bsr.server.database.DatabaseHandler;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.bson.types.ObjectId;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Indexed;
+import org.mongodb.morphia.annotations.Reference;
+import org.mongodb.morphia.query.Query;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by Asia on 30.12.2016.
  */
-@DatabaseTable(tableName = "sessions")
+@Entity("sessions")
 public class Session {
-    @DatabaseField(generatedId = true)
-    private int id;
-    @DatabaseField(canBeNull = false, foreign = true)
+    @Id
+    private ObjectId id;
+    @NotNull
+    @Indexed(name = "sessionId", unique = true)
+    private int sessionId;
+    @Reference
+    @NotNull
     private User user;
-    @DatabaseField(canBeNull = false)
+    @NotNull
     private String timestamp;
 
     public Session() {
@@ -21,14 +34,24 @@ public class Session {
     public Session(User user) {
         this.user = user;
         this.timestamp = Long.toString(System.currentTimeMillis());
+        AccountCounter query = DatabaseHandler.getInstance().getMongoDataStore().find(AccountCounter.class).get();
+        System.out.println(query.getAccountNumber());
     }
 
-    public int getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(ObjectId id) {
         this.id = id;
+    }
+
+    public int getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(int sessionId) {
+        this.sessionId = sessionId;
     }
 
     public User getUser() {

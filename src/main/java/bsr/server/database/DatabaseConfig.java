@@ -67,26 +67,28 @@ public class DatabaseConfig {
     }
 
     public void initAccountCounter() {
-        accountCounter = new AccountCounter(1);
-        try {
-            databaseHandler.getAccountCounterDao().create(accountCounter);
-        } catch (SQLException e) {
-            System.out.println("Account counter not initialized");
-        }
+        //TODO:
+//        accountCounter = new AccountCounter(1);
+//        try {
+//            databaseHandler.getAccountCounterDao().create(accountCounter);
+//        } catch (SQLException e) {
+//            System.out.println("Account counter not initialized");
+//        }
     }
 
     public void initDatabase() {
-        try {
-            databaseHandler.getUserDao().create(getUsers());
-        } catch (SQLException e) {
-            System.out.println("Users not initialized");
-        }
-
-        try {
-            databaseHandler.getAccountDao().create(getAccounts());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        //TODO:
+//        try {
+//            databaseHandler.getUserDao().create(getUsers());
+//        } catch (SQLException e) {
+//            System.out.println("Users not initialized");
+//        }
+//
+//        try {
+//            databaseHandler.getAccountDao().create(getAccounts());
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 
     }
 }

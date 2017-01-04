@@ -28,23 +28,25 @@ public abstract class AuthSessionFromDatabaseUtil {
     }
 
     public static Session getSessionFromWebServiceContext(WebServiceContext context) throws SessionException, SQLException {
-        String sessionId = getSessionIdFromWebServiceContext(context);
-        Session session = databaseHandler.getSessionDao().queryForId(sessionId);
-        if(session == null) {
-            throw new SessionException("User is not logged in or session has expired");
-        }
+        //TODO:
+//        String sessionId = getSessionIdFromWebServiceContext(context);
+//        Session session = databaseHandler.getSessionDao().queryForId(sessionId);
+//        if(session == null) {
+//            throw new SessionException("User is not logged in or session has expired");
+//        }
 
-        return session;
+        return null;
     }
 
     public static User getUserFromWebServiceContext(WebServiceContext context) throws UserException, SessionException, SQLException {
-        Session session = getSessionFromWebServiceContext(context);
-        User user = session.getUser();
-        if(user == null) {
-            databaseHandler.getSessionDao().delete(session);
-            throw new UserException("User assigned to this session not exists");
-        }
+// TODO
+// Session session = getSessionFromWebServiceContext(context);
+//        User user = session.getUser();
+//        if(user == null) {
+//            databaseHandler.getSessionDao().delete(session);
+//            throw new UserException("User assigned to this session not exists");
+//        }
 
-        return user;
+        return null;
     }
 }
