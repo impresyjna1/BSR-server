@@ -52,6 +52,7 @@ public class AccountService {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            System.out.println(accounts.size());
             return accounts;
         }
         return null;

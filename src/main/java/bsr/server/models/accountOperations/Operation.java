@@ -34,7 +34,7 @@ public abstract class Operation {
     @DatabaseField(canBeNull = false)
     protected String operationClassName;
     @DatabaseField(canBeNull = false, foreign = true)
-    private Account operationAccount;
+    private Account account;
 
     public Operation() {
     }
@@ -114,11 +114,11 @@ public abstract class Operation {
     }
 
     public Account getOperationAccount() {
-        return operationAccount;
+        return account;
     }
 
     public void setOperationAccount(Account operationAccount) {
-        this.operationAccount = operationAccount;
+        this.account = operationAccount;
     }
 
     protected abstract void execute(Account account) throws OperationException;

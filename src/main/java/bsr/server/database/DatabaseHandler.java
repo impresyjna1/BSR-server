@@ -80,6 +80,10 @@ public class DatabaseHandler {
         return sessionDao;
     }
 
+    public Dao<Operation, String> getOperationDao() {
+        return operationDao;
+    }
+
     public void closeConnection() {
         try {
             connectionSource.close();

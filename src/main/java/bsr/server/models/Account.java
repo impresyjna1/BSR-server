@@ -7,6 +7,7 @@ import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.sun.xml.internal.xsom.impl.scd.Iterators;
 
 
 import javax.xml.bind.annotation.XmlElementRef;
@@ -14,6 +15,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Created by Impresyjna on 27.12.2016.
@@ -35,6 +37,9 @@ public class Account {
     ForeignCollection<Operation> operations;
 
     public Account() {
+        if(operations == null) {
+            operations = new Iterators.Array<Operation>();
+        }
     }
 
     public Account(User owner) {
