@@ -1,18 +1,19 @@
 package bsr.server.innerServices;
 
+import bsr.server.database.AuthSessionFromDatabaseUtil;
 import bsr.server.database.DatabaseHandler;
-import bsr.server.exceptions.AuthException;
-import bsr.server.exceptions.NotValidException;
-import bsr.server.exceptions.ServerException;
+import bsr.server.exceptions.*;
 import bsr.server.models.Session;
 import bsr.server.models.User;
 import org.mongodb.morphia.Datastore;
 
+import javax.annotation.Resource;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.ws.BindingType;
+import javax.xml.ws.WebServiceContext;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -22,6 +23,8 @@ import java.util.*;
 @WebService
 @BindingType(value = javax.xml.ws.soap.SOAPBinding.SOAP12HTTP_BINDING)
 public class UserService {
+    @Resource
+    private WebServiceContext context;
 
     Datastore mongoDataStore = DatabaseHandler.getInstance().getMongoDataStore();
 
@@ -48,8 +51,11 @@ public class UserService {
         }
     }
 
-    public void getUser() {
-        // TODO: To get data about user to show in client
+    @WebMethod
+    public User getUser() throws SessionException, UserException {
+        User user = AuthSessionFromDatabaseUtil.getUserFromWebServiceContext(context);
+
+        return user;
     }
 
     private void validateParams(Map<String, Object> paramsMap) throws NotValidException {
