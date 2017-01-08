@@ -1,6 +1,7 @@
 package bsr.server.database;
 import bsr.server.models.AccountCounter;
 import bsr.server.models.Session;
+import bsr.server.models.SessionCounter;
 import bsr.server.models.User;
 import bsr.server.properties.Config;
 import com.mongodb.MongoClient;
@@ -29,7 +30,12 @@ public class DatabaseHandler {
         if(mongoDataStore.getCount(AccountCounter.class) == 0) {
             mongoDataStore.save(new AccountCounter());
         }
-        Session session = new Session(new User());
+        if(mongoDataStore.getCount(SessionCounter.class) == 0) {
+            mongoDataStore.save(new SessionCounter());
+        }
+        if(mongoDataStore.getCount(User.class) == 0) {
+            new DatabaseConfig().initDatabase();
+        }
         System.out.println("Opened bsr.server.database successfully");
     }
 

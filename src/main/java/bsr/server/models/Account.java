@@ -3,47 +3,65 @@ package bsr.server.models;
 import bsr.server.database.DatabaseHandler;
 import bsr.server.models.accountOperations.Operation;
 import bsr.server.properties.Config;
-import com.j256.ormlite.dao.ForeignCollection;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
-import com.j256.ormlite.table.DatabaseTable;
-import com.sun.xml.internal.xsom.impl.scd.Iterators;
+import com.mongodb.operation.UpdateOperation;
+import org.bson.types.ObjectId;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Indexed;
+import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateOperations;
 
-
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlSeeAlso;
-import java.sql.SQLException;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by Impresyjna on 27.12.2016.
  */
 @XmlSeeAlso({Operation.class})
-@DatabaseTable(tableName = "accounts")
+@Entity("accounts")
 public class Account {
-    @DatabaseField(generatedId = true)
-    private int id;
-    @DatabaseField
+    @Id
+    @XmlTransient
+    private ObjectId id;
+    @NotNull
+    @Indexed(name = "accountNumber", unique = true)
     private String accountNumber;
-    @DatabaseField
-    private int accountAmount;
-    @DatabaseField
+    @NotNull
+    private int balance;
+    @NotNull
+    private String titleOFAccount;
+    @NotNull
     private boolean open;
-    @DatabaseField(canBeNull = false, foreign = true)
-    private User owner;
-    @ForeignCollectionField(eager = false)
-    ForeignCollection<Operation> operations;
+    @Embedded
+    private List<Operation> operations;
 
     public Account() {
+        if (operations == null) {
+            operations = new ArrayList<>();
+        }
     }
 
-    public Account(User owner) {
+    public Account(String titleOFAccount) {
         this.accountNumber = generateAccountNo();
-        this.accountAmount = 0;
+        this.balance = 0;
         this.open = true;
-        this.owner = owner;
+        this.operations = new ArrayList<>();
+        this.titleOFAccount = titleOFAccount;
+    }
+
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
     }
 
     public String getAccountNumber() {
@@ -54,12 +72,20 @@ public class Account {
         this.accountNumber = accountNumber;
     }
 
-    public int getAccountAmount() {
-        return accountAmount;
+    public int getBalance() {
+        return balance;
     }
 
-    public void setAccountAmount(int accountAmount) {
-        this.accountAmount = accountAmount;
+    public void setBalance(int balance) {
+        this.balance = balance;
+    }
+
+    public String getTitleOFAccount() {
+        return titleOFAccount;
+    }
+
+    public void setTitleOFAccount(String titleOFAccount) {
+        this.titleOFAccount = titleOFAccount;
     }
 
     public boolean isOpen() {
@@ -70,55 +96,39 @@ public class Account {
         this.open = open;
     }
 
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    @XmlElementWrapper(name="operations")
+    @XmlElementWrapper(name = "operations")
     @XmlElementRef()
-    public ForeignCollection<Operation> getOperations() {
+    public List<Operation> getOperations() {
         return operations;
     }
 
-    public void setOperations(ForeignCollection<Operation> operations) {
+    public void setOperations(List<Operation> operations) {
         this.operations = operations;
     }
 
     public String generateAccountNo() {
-        //TODO:
-//        DatabaseHandler databaseHandler = DatabaseHandler.getInstance();
-//        try {
-//            AccountCounter accountCounter = databaseHandler.getAccountCounterDao().queryForFirst(databaseHandler.getAccountCounterDao().queryBuilder().prepare());
-//            accountCounter.incrementNumber();
-//            String accountNo = Config.BANK_ID + String.format("%016d", accountCounter.getAccountNumber());
-//            String tmpNo = accountNo + "101100";
-//            String part1 = tmpNo.substring(0, 15);
-//            String part2 = tmpNo.substring(15);
-//            long rest1 = Long.parseLong(part1)%97;
-//            long rest2 = Long.parseLong(rest1 + part2)%97;
-//            long checkSum = 98 - rest2;
-//
-//            accountNo = String.format("%02d", checkSum) + accountNo;
-//            System.out.println(accountNo);
-//            databaseHandler.getAccountCounterDao().update(accountCounter);
-//            return accountNo;
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
+        Datastore mongoDataStore = DatabaseHandler.getInstance().getMongoDataStore();
+        AccountCounter accountCounter = mongoDataStore.find(AccountCounter.class).get();
+        accountCounter.incrementNumber();
 
-        return "";
+        String accountNo = Config.BANK_ID + String.format("%016d", accountCounter.getAccountNumber());
+        String tmpNo = accountNo + "101100";
+        String part1 = tmpNo.substring(0, 15);
+        String part2 = tmpNo.substring(15);
+        long rest1 = Long.parseLong(part1) % 97;
+        long rest2 = Long.parseLong(rest1 + part2) % 97;
+        long checkSum = 98 - rest2;
+
+        accountNo = String.format("%02d", checkSum) + accountNo;
+        System.out.println(accountNo);
+
+
+        Query<AccountCounter> query = mongoDataStore.createQuery(AccountCounter.class).field("id").equal(accountCounter.getId());
+        UpdateOperations<AccountCounter> ops = mongoDataStore.createUpdateOperations(AccountCounter.class).set("accountNumber", accountCounter.getAccountNumber());
+        mongoDataStore.update(query, ops);
+
+        return accountNo;
+
     }
 
     public void addBankOperation(Operation operation) {

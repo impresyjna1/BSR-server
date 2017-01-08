@@ -68,3 +68,4 @@ bank.db
 /target
 /.idea
 /out
+/database

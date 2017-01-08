@@ -34,8 +34,9 @@ public class Session {
     public Session(User user) {
         this.user = user;
         this.timestamp = Long.toString(System.currentTimeMillis());
-        AccountCounter query = DatabaseHandler.getInstance().getMongoDataStore().find(AccountCounter.class).get();
-        System.out.println(query.getAccountNumber());
+        SessionCounter query = DatabaseHandler.getInstance().getMongoDataStore().find(SessionCounter.class).get();
+
+        //TODO: SessionCounter id
     }
 
     public ObjectId getId() {
@@ -69,4 +70,6 @@ public class Session {
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
+
+    //TODO: Increment sessionCounter
 }

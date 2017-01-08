@@ -9,6 +9,7 @@ import org.mongodb.morphia.annotations.Reference;
 import javax.validation.constraints.NotNull;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class User {
         this.surname = surname;
         this.clientNumber = clientNumber;
         this.password = hashPassword(password);
+        this.accounts = new ArrayList<>();
     }
 
     public ObjectId getId() {

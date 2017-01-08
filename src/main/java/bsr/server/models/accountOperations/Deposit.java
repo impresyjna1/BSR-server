@@ -26,8 +26,8 @@ public class Deposit extends Operation {
     }
 
     protected void execute(Account account) throws OperationException {
-        account.setAccountAmount(account.getAccountAmount() + amount);
-        this.balanceAfter = account.getAccountAmount();
+        account.setBalance(account.getBalance() + amount);
+        this.balanceAfter = account.getBalance();
         this.account = account;
         //TODO:
 //        try {

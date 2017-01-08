@@ -3,6 +3,7 @@ package bsr.server.database;
 import bsr.server.models.Account;
 import bsr.server.models.AccountCounter;
 import bsr.server.models.User;
+import org.mongodb.morphia.Datastore;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,11 +13,8 @@ import java.util.ArrayList;
  */
 public class DatabaseConfig {
     private ArrayList<User> users = new ArrayList<User>();
-    private ArrayList<Account> accounts = new ArrayList<Account>();
-    private AccountCounter accountCounter;
-    DatabaseHandler databaseHandler = DatabaseHandler.getInstance();
 
-    public ArrayList<User> getUsers() {
+    public void initUsers() {
         User user1 = new User("Alicja", "Grzyb", "111111", "grzyb");
         User user2 = new User("Krzysztof", "Kowalski", "222222", "kowalski");
         User user3 = new User("Karolina", "Nowak", "333333", "nowak");
@@ -27,68 +25,64 @@ public class DatabaseConfig {
         users.add(user3);
         users.add(user4);
         users.add(user5);
-        return users;
     }
 
-    public ArrayList<Account> getAccounts() {
+    public void initAccounts() {
+        Datastore mongoDataStore = DatabaseHandler.getInstance().getMongoDataStore();
+
         User user = users.get(0);
-        Account account1 = new Account(user);
-        Account account2 = new Account(user);
-        Account account3 = new Account(user);
+
+        Account account1 = new Account("Account1");
+        Account account2 = new Account("Account2");
+        Account account3 = new Account("Account3");
+        ArrayList<Account> accounts = new ArrayList<>();
         accounts.add(account1);
         accounts.add(account2);
         accounts.add(account3);
+        mongoDataStore.save(accounts);
+        user.setAccounts(accounts);
 
         user = users.get(1);
-        account1 = new Account(user);
-        account2 = new Account(user);
+        account1 = new Account("Account4");
+        account2 = new Account("Account5");
+        accounts.clear();
         accounts.add(account1);
         accounts.add(account2);
+        mongoDataStore.save(accounts);
+        user.setAccounts(accounts);
 
         user = users.get(2);
-        account1 = new Account(user);
+        account1 = new Account("Account6");
+        accounts.clear();
         accounts.add(account1);
+        mongoDataStore.save(accounts);
+        user.setAccounts(accounts);
 
         user = users.get(3);
-        account1 = new Account(user);
-        account2 = new Account(user);
-        account3 = new Account(user);
-        Account account4 = new Account(user);
+        account1 = new Account("Account7");
+        account2 = new Account("Account8");
+        account3 = new Account("Account9");
+        Account account4 = new Account("Account10");
+        accounts.clear();
         accounts.add(account1);
         accounts.add(account2);
         accounts.add(account3);
         accounts.add(account4);
+        mongoDataStore.save(accounts);
+        user.setAccounts(accounts);
 
         user = users.get(4);
-        account1 = new Account(user);
+        account1 = new Account("Account11");
+        accounts.clear();
         accounts.add(account1);
-
-        return accounts;
-    }
-
-    public void initAccountCounter() {
-        //TODO:
-//        accountCounter = new AccountCounter(1);
-//        try {
-//            databaseHandler.getAccountCounterDao().create(accountCounter);
-//        } catch (SQLException e) {
-//            System.out.println("Account counter not initialized");
-//        }
+        mongoDataStore.save(accounts);
+        user.setAccounts(accounts);
     }
 
     public void initDatabase() {
-        //TODO:
-//        try {
-//            databaseHandler.getUserDao().create(getUsers());
-//        } catch (SQLException e) {
-//            System.out.println("Users not initialized");
-//        }
-//
-//        try {
-//            databaseHandler.getAccountDao().create(getAccounts());
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-
+        Datastore mongoDataStore = DatabaseHandler.getInstance().getMongoDataStore();
+        initUsers();
+        initAccounts();
+        mongoDataStore.save(users);
     }
 }
