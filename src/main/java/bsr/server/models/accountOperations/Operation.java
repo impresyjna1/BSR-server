@@ -2,38 +2,29 @@ package bsr.server.models.accountOperations;
 
 import bsr.server.exceptions.OperationException;
 import bsr.server.models.Account;
-import bsr.server.models.User;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
+import org.mongodb.morphia.annotations.Embedded;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.*;
 
 /**
  * Created by Impresyjna on 01.01.2017.
  */
+@Embedded
 @XmlSeeAlso({Deposit.class})
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "operation")
 public abstract class Operation {
-    @DatabaseField(generatedId = true)
-    protected int id;
-    @DatabaseField(canBeNull = false)
+    @NotNull
     protected String title;
-    @DatabaseField(canBeNull = false)
+    @NotNull
     protected int amount;
-    @DatabaseField
     protected int balanceAfter;
-    @DatabaseField
-    protected boolean executed = false;
-    @DatabaseField(canBeNull = false)
+    @XmlElement(name = "target_account")
+    @NotNull
     protected String targetAccountNumber;
-    @DatabaseField(canBeNull = false)
-    protected String operationClassName;
-    @DatabaseField(canBeNull = false, foreign = true)
-    protected Account account;
+    @XmlTransient
+    protected boolean executed;
 
     public Operation() {
     }
@@ -42,14 +33,6 @@ public abstract class Operation {
         this.title = title;
         this.amount = amount;
         this.targetAccountNumber = targetAccountNumber;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -76,14 +59,6 @@ public abstract class Operation {
         this.balanceAfter = balanceAfter;
     }
 
-    public boolean isExecuted() {
-        return executed;
-    }
-
-    public void setExecuted(boolean executed) {
-        this.executed = executed;
-    }
-
     public String getTargetAccountNumber() {
         return targetAccountNumber;
     }
@@ -92,12 +67,12 @@ public abstract class Operation {
         this.targetAccountNumber = targetAccountNumber;
     }
 
-    public String getOperationClassName() {
-        return operationClassName;
+    public boolean isExecuted() {
+        return executed;
     }
 
-    public void setOperationClassName(String operationClassName) {
-        this.operationClassName = operationClassName;
+    public void setExecuted(boolean executed) {
+        this.executed = executed;
     }
 
     public void doOperation(Account account) throws OperationException {
@@ -110,14 +85,6 @@ public abstract class Operation {
 
         execute(account);
         executed = true;
-    }
-
-    public Account getOperationAccount() {
-        return account;
-    }
-
-    public void setOperationAccount(Account operationAccount) {
-        this.account = operationAccount;
     }
 
     protected abstract void execute(Account account) throws OperationException;

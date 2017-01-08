@@ -3,7 +3,6 @@ package bsr.server.models;
 import bsr.server.database.DatabaseHandler;
 import bsr.server.models.accountOperations.Operation;
 import bsr.server.properties.Config;
-import com.mongodb.operation.UpdateOperation;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.annotations.Embedded;

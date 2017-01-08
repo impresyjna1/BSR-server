@@ -1,8 +1,6 @@
 package bsr.server.models;
 
 import bsr.server.database.DatabaseHandler;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.annotations.Entity;

@@ -48,51 +48,37 @@ public class AccountService {
     @WebMethod
     public Operation depositMoney(@WebParam(name = "title") @XmlElement(required = true) final String title,
                                   @WebParam(name = "amount") @XmlElement(required = true) final String amount,
-                                  @WebParam(name = "targetAccountNumber") @XmlElement(required = true) final String targetAccountNumber) throws NotValidException, ServerException, AccountServiceException, OperationException {
-//  TODO:
-// Map<String, Object> parametersMap = new HashMap<String, Object>() {{
-//            put("title", title);
-//            put("amount", amount);
-//            put("receiver account no", targetAccountNumber);
-//        }};
-//        validateParams(parametersMap);
-//
-//        User user = null;
-//        try {
-//            user = AuthSessionFromDatabaseUtil.getUserFromWebServiceContext(context);
-//        } catch (UserException | SessionException | SQLException e) {
-//            e.printStackTrace();
-//        }
-//        Account targetAccount = null;
-//        try {
-//            final User finalUser = user;
-//            Map<String, Object> accountParams = new HashMap<String, Object>() {{
-//                put("owner_id", finalUser.getId());
-//                put("accountNumber", targetAccountNumber);
-//            }};
-//            targetAccount = databaseHandler.getAccountDao().queryForFieldValues(accountParams).get(0);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            throw new AccountServiceException("Source bank account does not exist");
-//        }
-//        Deposit deposit = new Deposit(title, (int) (Double.parseDouble(amount)*100), targetAccountNumber);
-//        deposit.doOperation(targetAccount);
-//        return deposit;
-        return null;
+                                  @WebParam(name = "targetAccountNumber") @XmlElement(required = true) final String targetAccountNumber) throws NotValidException, SessionException, UserException, OperationException {
+        Map<String, Object> parametersMap = new HashMap<String, Object>() {{
+            put("title", title);
+            put("amount", amount);
+            put("receiver account no", targetAccountNumber);
+        }};
+        validateParams(parametersMap);
+
+        User user = AuthSessionFromDatabaseUtil.getUserFromWebServiceContext(context);
+        Account targetAccount = mongoDataStore.find(Account.class)
+                .field("accountNumber")
+                .equal(targetAccountNumber)
+                .get();
+
+        Deposit deposit = new Deposit(title, (int) (Integer.parseInt(amount)), targetAccountNumber);
+        deposit.doOperation(targetAccount);
+        return deposit;
     }
 
     private void validateParams(Map<String, Object> paramsMap) throws NotValidException {
         String exceptionMessage = "";
-        for(Map.Entry<String, Object> param: paramsMap.entrySet()) {
-            if(param.getValue() instanceof String) {
-                String value = (String)param.getValue();
-                if(value.length() == 0) {
+        for (Map.Entry<String, Object> param : paramsMap.entrySet()) {
+            if (param.getValue() instanceof String) {
+                String value = (String) param.getValue();
+                if (value.length() == 0) {
                     exceptionMessage += param.getKey() + " ";
                 }
-            } else if(param.getKey() == "amount") {
+            } else if (param.getKey() == "amount") {
                 try {
                     double amount = Double.parseDouble(String.valueOf(param));
-                    if(amount<=0) {
+                    if (amount <= 0) {
                         exceptionMessage += param.getKey() + " ";
                     }
                 } catch (Exception e) {
@@ -101,7 +87,7 @@ public class AccountService {
             }
         }
 
-        if(exceptionMessage.length() > 0) {
+        if (exceptionMessage.length() > 0) {
             exceptionMessage += " is missing or is invalid";
             throw new NotValidException(exceptionMessage);
         }
