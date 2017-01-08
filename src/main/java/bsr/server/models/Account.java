@@ -38,6 +38,8 @@ public class Account {
     private String titleOFAccount;
     @NotNull
     private boolean open;
+    @NotNull
+    private int feeCount;
     @Embedded
     private List<Operation> operations;
 
@@ -47,12 +49,13 @@ public class Account {
         }
     }
 
-    public Account(String titleOFAccount) {
+    public Account(String titleOFAccount, int feeCount) {
         this.accountNumber = generateAccountNo();
         this.balance = 0;
         this.open = true;
         this.operations = new ArrayList<>();
         this.titleOFAccount = titleOFAccount;
+        this.feeCount = feeCount;
     }
 
     public ObjectId getId() {
@@ -93,6 +96,14 @@ public class Account {
 
     public void setOpen(boolean open) {
         this.open = open;
+    }
+
+    public int getFeeCount() {
+        return feeCount;
+    }
+
+    public void setFeeCount(int feeCount) {
+        this.feeCount = feeCount;
     }
 
     @XmlElementWrapper(name = "operations")

@@ -5,6 +5,7 @@ import bsr.server.database.DatabaseHandler;
 import bsr.server.exceptions.*;
 import bsr.server.models.Account;
 import bsr.server.models.User;
+import bsr.server.models.accountOperations.BankFee;
 import bsr.server.models.accountOperations.Deposit;
 import bsr.server.models.accountOperations.Operation;
 import bsr.server.models.accountOperations.Withdraw;
@@ -90,6 +91,25 @@ public class AccountService {
         withdraw.doOperation(targetAccount);
         mongoDataStore.save(targetAccount);
         return withdraw;
+    }
+
+    @WebMethod
+    public Operation getBankFeeFromAccount(@WebParam(name = "targetAccountNumber") @XmlElement(required = true) final String targetAccountNumber) throws NotValidException, SessionException, UserException, OperationException {
+        Map<String, Object> parametersMap = new HashMap<String, Object>() {{
+            put("receiver account no", targetAccountNumber);
+        }};
+        validateParams(parametersMap);
+
+        User user = AuthSessionFromDatabaseUtil.getUserFromWebServiceContext(context);
+        Account targetAccount = mongoDataStore.find(Account.class)
+                .field("accountNumber")
+                .equal(targetAccountNumber)
+                .get();
+
+        BankFee bankFee = new BankFee("", targetAccount.getFeeCount(), targetAccountNumber);
+        bankFee.doOperation(targetAccount);
+        mongoDataStore.save(targetAccount);
+        return bankFee;
     }
 
     private void validateParams(Map<String, Object> paramsMap) throws NotValidException {

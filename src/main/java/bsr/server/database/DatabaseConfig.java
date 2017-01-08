@@ -32,9 +32,9 @@ public class DatabaseConfig {
 
         User user = users.get(0);
 
-        Account account1 = new Account("Account1");
-        Account account2 = new Account("Account2");
-        Account account3 = new Account("Account3");
+        Account account1 = new Account("Account1", 500);
+        Account account2 = new Account("Account2", 100);
+        Account account3 = new Account("Account3", 200);
         ArrayList<Account> accounts = new ArrayList<>();
         accounts.add(account1);
         accounts.add(account2);
@@ -43,8 +43,8 @@ public class DatabaseConfig {
         user.setAccounts(accounts);
 
         user = users.get(1);
-        account1 = new Account("Account4");
-        account2 = new Account("Account5");
+        account1 = new Account("Account4", 100);
+        account2 = new Account("Account5", 200);
         accounts = new ArrayList<>();
         accounts.add(account1);
         accounts.add(account2);
@@ -52,17 +52,17 @@ public class DatabaseConfig {
         user.setAccounts(accounts);
 
         user = users.get(2);
-        account1 = new Account("Account6");
+        account1 = new Account("Account6", 300);
         accounts = new ArrayList<>();
         accounts.add(account1);
         mongoDataStore.save(accounts);
         user.setAccounts(accounts);
 
         user = users.get(3);
-        account1 = new Account("Account7");
-        account2 = new Account("Account8");
-        account3 = new Account("Account9");
-        Account account4 = new Account("Account10");
+        account1 = new Account("Account7", 400);
+        account2 = new Account("Account8", 500);
+        account3 = new Account("Account9", 100);
+        Account account4 = new Account("Account10", 200);
         accounts = new ArrayList<>();
         accounts.add(account1);
         accounts.add(account2);
@@ -72,7 +72,7 @@ public class DatabaseConfig {
         user.setAccounts(accounts);
 
         user = users.get(4);
-        account1 = new Account("Account11");
+        account1 = new Account("Account11", 300);
         accounts = new ArrayList<>();
         accounts.add(account1);
         mongoDataStore.save(accounts);
