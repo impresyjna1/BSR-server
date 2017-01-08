@@ -45,7 +45,7 @@ public class DatabaseConfig {
         user = users.get(1);
         account1 = new Account("Account4");
         account2 = new Account("Account5");
-        accounts.clear();
+        accounts = new ArrayList<>();
         accounts.add(account1);
         accounts.add(account2);
         mongoDataStore.save(accounts);
@@ -53,7 +53,7 @@ public class DatabaseConfig {
 
         user = users.get(2);
         account1 = new Account("Account6");
-        accounts.clear();
+        accounts = new ArrayList<>();
         accounts.add(account1);
         mongoDataStore.save(accounts);
         user.setAccounts(accounts);
@@ -63,7 +63,7 @@ public class DatabaseConfig {
         account2 = new Account("Account8");
         account3 = new Account("Account9");
         Account account4 = new Account("Account10");
-        accounts.clear();
+        accounts = new ArrayList<>();
         accounts.add(account1);
         accounts.add(account2);
         accounts.add(account3);
@@ -73,7 +73,7 @@ public class DatabaseConfig {
 
         user = users.get(4);
         account1 = new Account("Account11");
-        accounts.clear();
+        accounts = new ArrayList<>();
         accounts.add(account1);
         mongoDataStore.save(accounts);
         user.setAccounts(accounts);

@@ -25,19 +25,19 @@ public abstract class AuthSessionFromDatabaseUtil {
         return (String) sessionId.get(0);
     }
 
-    public static Session getSessionFromWebServiceContext(WebServiceContext context) throws SessionException, SQLException {
+    public static Session getSessionFromWebServiceContext(WebServiceContext context) throws SessionException {
         String sessionId = getSessionIdFromWebServiceContext(context);
         Session session = DatabaseHandler.getInstance().getMongoDataStore()
                 .find(Session.class)
                 .field("sessionId")
-                .equal(sessionId).get();
+                .equal(Integer.parseInt(sessionId)).get();
         if (session == null) {
             throw new SessionException("User is not logged in or session has expired");
         }
-        return null;
+        return session;
     }
 
-    public static User getUserFromWebServiceContext(WebServiceContext context) throws UserException, SessionException, SQLException {
+    public static User getUserFromWebServiceContext(WebServiceContext context) throws UserException, SessionException {
         Session session = getSessionFromWebServiceContext(context);
         User user = session.getUser();
         if (user == null) {

@@ -8,6 +8,7 @@ import bsr.server.models.User;
 import bsr.server.models.accountOperations.Deposit;
 import bsr.server.models.accountOperations.Operation;
 import com.j256.ormlite.stmt.PreparedQuery;
+import org.mongodb.morphia.Datastore;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
@@ -30,33 +31,18 @@ public class AccountService {
     @Resource
     private WebServiceContext context;
 
-    DatabaseHandler databaseHandler = DatabaseHandler.getInstance();
+    Datastore mongoDataStore = DatabaseHandler.getInstance().getMongoDataStore();
 
 
     @WebMethod
     public List<Account> getAccounts() throws SessionException, UserException {
         //TODO:
-//        User user = null;
-//        try {
-//            user = AuthSessionFromDatabaseUtil.getUserFromWebServiceContext(context);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        if (user != null) {
-//            final User finalUser = user;
-//            Map<String, Object> queryParams = new HashMap<String, Object>() {{
-//                put("owner_id", finalUser.getId());
-//            }};
-//            List<Account> accounts = null;
-//            try {
-//                accounts = databaseHandler.getAccountDao().queryForFieldValues(queryParams);
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//            System.out.println(accounts.size());
-//            return accounts;
-//        }
-        return null;
+        User user = AuthSessionFromDatabaseUtil.getUserFromWebServiceContext(context);
+        if (user != null) {
+            return user.getAccounts();
+        } else {
+            throw new SessionException("No user for this session");
+        }
     }
 
     @WebMethod
