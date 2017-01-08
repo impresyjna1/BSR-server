@@ -7,6 +7,7 @@ import bsr.server.models.Account;
 import bsr.server.models.User;
 import bsr.server.models.accountOperations.Deposit;
 import bsr.server.models.accountOperations.Operation;
+import bsr.server.models.accountOperations.Withdraw;
 import com.j256.ormlite.stmt.PreparedQuery;
 import org.mongodb.morphia.Datastore;
 
@@ -64,7 +65,31 @@ public class AccountService {
 
         Deposit deposit = new Deposit(title, (int) (Integer.parseInt(amount)), targetAccountNumber);
         deposit.doOperation(targetAccount);
+        mongoDataStore.save(targetAccount);
         return deposit;
+    }
+
+    @WebMethod
+    public Operation withdrawMoney(@WebParam(name = "title") @XmlElement(required = true) final String title,
+                                   @WebParam(name = "amount") @XmlElement(required = true) final String amount,
+                                   @WebParam(name = "targetAccountNumber") @XmlElement(required = true) final String targetAccountNumber) throws NotValidException, SessionException, UserException, OperationException {
+        Map<String, Object> parametersMap = new HashMap<String, Object>() {{
+            put("title", title);
+            put("amount", amount);
+            put("receiver account no", targetAccountNumber);
+        }};
+        validateParams(parametersMap);
+
+        User user = AuthSessionFromDatabaseUtil.getUserFromWebServiceContext(context);
+        Account targetAccount = mongoDataStore.find(Account.class)
+                .field("accountNumber")
+                .equal(targetAccountNumber)
+                .get();
+
+        Withdraw withdraw = new Withdraw(title, (int) (Integer.parseInt(amount)), targetAccountNumber);
+        withdraw.doOperation(targetAccount);
+        mongoDataStore.save(targetAccount);
+        return withdraw;
     }
 
     private void validateParams(Map<String, Object> paramsMap) throws NotValidException {
