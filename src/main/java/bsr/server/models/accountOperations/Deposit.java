@@ -1,12 +1,10 @@
 package bsr.server.models.accountOperations;
 
-import bsr.server.database.DatabaseHandler;
 import bsr.server.exceptions.OperationException;
 import bsr.server.models.Account;
 import com.j256.ormlite.table.DatabaseTable;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.sql.SQLException;
 
 /**
  * Created by Impresyjna on 01.01.2017.

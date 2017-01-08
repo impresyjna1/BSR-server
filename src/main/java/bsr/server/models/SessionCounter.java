@@ -34,4 +34,8 @@ public class SessionCounter {
     public void setSessionCounter(int sessionCounter) {
         this.sessionCounter = sessionCounter;
     }
+
+    public void incrementId() {
+        this.sessionCounter = this.sessionCounter + 1;
+    }
 }

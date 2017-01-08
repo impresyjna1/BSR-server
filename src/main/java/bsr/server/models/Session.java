@@ -4,11 +4,13 @@ import bsr.server.database.DatabaseHandler;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import org.bson.types.ObjectId;
+import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Indexed;
 import org.mongodb.morphia.annotations.Reference;
 import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateOperations;
 
 import javax.validation.constraints.NotNull;
 
@@ -34,9 +36,15 @@ public class Session {
     public Session(User user) {
         this.user = user;
         this.timestamp = Long.toString(System.currentTimeMillis());
-        SessionCounter query = DatabaseHandler.getInstance().getMongoDataStore().find(SessionCounter.class).get();
+        SessionCounter sessionCounter = DatabaseHandler.getInstance().getMongoDataStore().find(SessionCounter.class).get();
+        sessionCounter.incrementId();
+        this.sessionId = sessionCounter.getSessionCounter();
 
-        //TODO: SessionCounter id
+        //Update in database
+        Datastore mongoDataStore = DatabaseHandler.getInstance().getMongoDataStore();
+        Query<SessionCounter> query = mongoDataStore.createQuery(SessionCounter.class).field("id").equal(sessionCounter.getId());
+        UpdateOperations<SessionCounter> ops = mongoDataStore.createUpdateOperations(SessionCounter.class).set("sessionCounter", sessionCounter.getSessionCounter());
+        mongoDataStore.update(query, ops);
     }
 
     public ObjectId getId() {
@@ -71,5 +79,4 @@ public class Session {
         this.timestamp = timestamp;
     }
 
-    //TODO: Increment sessionCounter
 }

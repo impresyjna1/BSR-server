@@ -41,18 +41,11 @@ public class UserService {
                 .get();
         if(user == null) {
             throw new AuthException("Bad auth");
+        } else {
+            Session session = new Session(user);
+            mongoDataStore.save(session);
+            return session.getSessionId();
         }
-        //TODO:
-//        else {
-//            Session session = new Session(user);
-//            try {
-//                databaseHandler.getSessionDao().create(session);
-//            } catch (SQLException e) {
-//                throw new ServerException("Can not init session");
-//            }
-//            return session.getId();
-//        }
-            return 0;
     }
 
     public void getUser() {

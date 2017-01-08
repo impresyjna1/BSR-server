@@ -1,6 +1,5 @@
 package bsr.server.database;
 
-import bsr.server.exceptions.AuthException;
 import bsr.server.exceptions.SessionException;
 import bsr.server.exceptions.UserException;
 import bsr.server.models.Session;
@@ -16,37 +15,36 @@ import java.util.Map;
  * Created by Impresyjna on 01.01.2017.
  */
 public abstract class AuthSessionFromDatabaseUtil {
-    private static DatabaseHandler databaseHandler = DatabaseHandler.getInstance();
     public static String getSessionIdFromWebServiceContext(WebServiceContext context) throws SessionException {
-        Map headers = (Map)context.getMessageContext().get(MessageContext.HTTP_REQUEST_HEADERS);
-        ArrayList sessionId = (ArrayList)headers.get("sessionId");
-        if(sessionId == null) {
+        Map headers = (Map) context.getMessageContext().get(MessageContext.HTTP_REQUEST_HEADERS);
+        ArrayList sessionId = (ArrayList) headers.get("sessionId");
+        if (sessionId == null) {
             throw new SessionException("Session id is missing");
         }
 
-        return (String)sessionId.get(0);
+        return (String) sessionId.get(0);
     }
 
     public static Session getSessionFromWebServiceContext(WebServiceContext context) throws SessionException, SQLException {
-        //TODO:
-//        String sessionId = getSessionIdFromWebServiceContext(context);
-//        Session session = databaseHandler.getSessionDao().queryForId(sessionId);
-//        if(session == null) {
-//            throw new SessionException("User is not logged in or session has expired");
-//        }
-
+        String sessionId = getSessionIdFromWebServiceContext(context);
+        Session session = DatabaseHandler.getInstance().getMongoDataStore()
+                .find(Session.class)
+                .field("sessionId")
+                .equal(sessionId).get();
+        if (session == null) {
+            throw new SessionException("User is not logged in or session has expired");
+        }
         return null;
     }
 
     public static User getUserFromWebServiceContext(WebServiceContext context) throws UserException, SessionException, SQLException {
-// TODO
-// Session session = getSessionFromWebServiceContext(context);
-//        User user = session.getUser();
-//        if(user == null) {
-//            databaseHandler.getSessionDao().delete(session);
-//            throw new UserException("User assigned to this session not exists");
-//        }
+        Session session = getSessionFromWebServiceContext(context);
+        User user = session.getUser();
+        if (user == null) {
+            DatabaseHandler.getInstance().getMongoDataStore().delete(session);
+            throw new UserException("User assigned to this session not exists");
+        }
 
-        return null;
+        return user;
     }
 }
