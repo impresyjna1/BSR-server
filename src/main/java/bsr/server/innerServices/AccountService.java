@@ -5,11 +5,8 @@ import bsr.server.database.DatabaseHandler;
 import bsr.server.exceptions.*;
 import bsr.server.models.Account;
 import bsr.server.models.User;
-import bsr.server.models.accountOperations.BankFee;
-import bsr.server.models.accountOperations.Deposit;
-import bsr.server.models.accountOperations.Operation;
-import bsr.server.models.accountOperations.Withdraw;
-import com.j256.ormlite.stmt.PreparedQuery;
+import bsr.server.models.accountOperations.*;
+import bsr.server.properties.Config;
 import org.mongodb.morphia.Datastore;
 
 import javax.annotation.Resource;
@@ -19,7 +16,6 @@ import javax.jws.WebService;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.ws.BindingType;
 import javax.xml.ws.WebServiceContext;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +50,7 @@ public class AccountService {
         Map<String, Object> parametersMap = new HashMap<String, Object>() {{
             put("title", title);
             put("amount", amount);
-            put("receiver account no", targetAccountNumber);
+            put("targetAccountNumber", targetAccountNumber);
         }};
         validateParams(parametersMap);
 
@@ -63,6 +59,8 @@ public class AccountService {
                 .field("accountNumber")
                 .equal(targetAccountNumber)
                 .get();
+
+        //TODO: throw here
 
         Deposit deposit = new Deposit(title, (int) (Integer.parseInt(amount)), targetAccountNumber);
         deposit.doOperation(targetAccount);
@@ -77,7 +75,7 @@ public class AccountService {
         Map<String, Object> parametersMap = new HashMap<String, Object>() {{
             put("title", title);
             put("amount", amount);
-            put("receiver account no", targetAccountNumber);
+            put("targetAccountNumber", targetAccountNumber);
         }};
         validateParams(parametersMap);
 
@@ -86,6 +84,8 @@ public class AccountService {
                 .field("accountNumber")
                 .equal(targetAccountNumber)
                 .get();
+
+        //TODO: throw here
 
         Withdraw withdraw = new Withdraw(title, (int) (Integer.parseInt(amount)), targetAccountNumber);
         withdraw.doOperation(targetAccount);
@@ -94,9 +94,9 @@ public class AccountService {
     }
 
     @WebMethod
-    public Operation getBankFeeFromAccount(@WebParam(name = "targetAccountNumber") @XmlElement(required = true) final String targetAccountNumber) throws NotValidException, SessionException, UserException, OperationException {
+    public Operation getBankFeeFromAccount(@WebParam(name = "targetAccountNumber") @XmlElement(required = true) final String targetAccountNumber) throws NotValidException, SessionException, UserException, OperationException, AccountServiceException {
         Map<String, Object> parametersMap = new HashMap<String, Object>() {{
-            put("receiver account no", targetAccountNumber);
+            put("targetAccountNumber", targetAccountNumber);
         }};
         validateParams(parametersMap);
 
@@ -106,10 +106,76 @@ public class AccountService {
                 .equal(targetAccountNumber)
                 .get();
 
+        if (targetAccount == null) {
+            throw new AccountServiceException("There is no account with this number");
+        }
+
         BankFee bankFee = new BankFee("", targetAccount.getFeeCount(), targetAccountNumber);
         bankFee.doOperation(targetAccount);
         mongoDataStore.save(targetAccount);
         return bankFee;
+    }
+
+    @WebMethod
+    public Operation transferMoney(@WebParam(name = "title") @XmlElement(required = true) final String title,
+                                   @WebParam(name = "amount") @XmlElement(required = true) final String amount,
+                                   @WebParam(name = "sourceAccountNumber") @XmlElement(required = true) final String sourceAccountNumber,
+                                   @WebParam(name = "targetAccountNumber") @XmlElement(required = true) final String targetAccountNumber) throws NotValidException, SessionException, UserException, AccountServiceException, OperationException, AccountException {
+        Map<String, Object> parametersMap = new HashMap<String, Object>() {{
+            put("targetAccountNumber", targetAccountNumber);
+            put("sourceAccountNumber", sourceAccountNumber);
+            put("amount", amount);
+            put("title", title);
+        }};
+        validateParams(parametersMap);
+        if (sourceAccountNumber.equals(targetAccountNumber)) {
+            throw new AccountServiceException("Can not transfer for same account");
+        }
+        User user = AuthSessionFromDatabaseUtil.getUserFromWebServiceContext(context);
+
+        Account sourceAccount = mongoDataStore.find(Account.class)
+                .field("accountNumber")
+                .equal(sourceAccountNumber)
+                .get();
+
+        Account targetAccount = mongoDataStore.find(Account.class)
+                .field("accountNumber")
+                .equal(targetAccountNumber)
+                .get();
+
+        if (sourceAccount == null) {
+            throw new AccountException("Source account doesn't exists");
+        }
+
+        Transfer fromSourceAccountTransfer = new Transfer(title, Integer.parseInt(amount), targetAccountNumber, Transfer.TransferEnum.OUT, sourceAccountNumber);
+        if (targetAccount != null) {
+            Transfer toTargetAccountTransfer = new Transfer(title, Integer.parseInt(amount), targetAccountNumber, Transfer.TransferEnum.IN, sourceAccountNumber);
+            innerTransfer(sourceAccount, targetAccount, fromSourceAccountTransfer, toTargetAccountTransfer);
+        } else if (targetAccount == null && targetAccountNumber.substring(2,10).equals(Config.BANK_ID)){
+            throw new AccountException("Account doesn't exists");
+        } else {
+            outerTransfer();
+        }
+        return fromSourceAccountTransfer;
+    }
+
+    private void outerTransfer() {
+
+    }
+
+    private void innerTransfer(Account sourceAccount, Account targetAccount, Transfer fromSourceTransfer, Transfer toTargetTransfer) throws OperationException, AccountException {
+        if(!sourceAccount.isOpen()) {
+            throw new AccountException("Source account is closed");
+        }
+        if(!targetAccount.isOpen()) {
+            throw new AccountException("Target account is closed");
+        }
+
+        fromSourceTransfer.doOperation(sourceAccount);
+        toTargetTransfer.doOperation(targetAccount);
+
+        mongoDataStore.save(sourceAccount);
+        mongoDataStore.save(targetAccount);
     }
 
     private void validateParams(Map<String, Object> paramsMap) throws NotValidException {
@@ -129,9 +195,13 @@ public class AccountService {
                 } catch (Exception e) {
                     exceptionMessage += param.getKey() + " ";
                 }
+            } else if (param.getKey().contains("AccountNumber")) {
+                String value = (String) param.getValue();
+                if (value.length() != 26 || value.matches("\\d+")) {
+                    exceptionMessage += param.getKey() + " ";
+                }
             }
         }
-
         if (exceptionMessage.length() > 0) {
             exceptionMessage += " is missing or is invalid";
             throw new NotValidException(exceptionMessage);
