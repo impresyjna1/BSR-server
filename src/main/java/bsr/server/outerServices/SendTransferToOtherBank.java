@@ -4,8 +4,10 @@ import bsr.server.exceptions.AccountServiceException;
 import bsr.server.properties.Config;
 import org.glassfish.jersey.internal.util.Base64;
 import org.json.JSONObject;
+import sun.misc.IOUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -50,21 +52,18 @@ public class SendTransferToOtherBank {
         boolean requestSuccess = false;
         //TODO: Handle server error response
         switch (status) {
-            case 404:
-                throw new AccountServiceException("Account not found");
-            case 403:
-                throw new AccountServiceException("Forbidden");
-            case 400:
-                throw new AccountServiceException("Bad request");
-            case 500:
-                throw new AccountServiceException("Internal server error");
-            case 418:
-                throw new AccountServiceException("Teapot");
             case 201:
                 requestSuccess = true;
+                return requestSuccess;
+            default:
+                InputStream response = connection.getErrorStream();
+                if(response != null) {
+                    String message = new String(IOUtils.readFully(response, -1, true));
+                    throw new AccountServiceException(message);
+                } else {
+                    throw new AccountServiceException();
+                }
         }
-
-        return requestSuccess;
     }
 
 }

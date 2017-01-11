@@ -18,7 +18,7 @@ public class Transfer extends Operation{
 
     @XmlTransient
     private TransferEnum transferType;
-    @XmlElement (name = "account_from")
+    @XmlElement (name = "from")
     @NotNull
     private String sourceAccountNumber;
 

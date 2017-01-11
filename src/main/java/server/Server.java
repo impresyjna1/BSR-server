@@ -1,6 +1,11 @@
 package server;
 
 import bsr.server.innerServices.AccountService;
+import bsr.server.outerServices.AccountResource;
+import bsr.server.providers.CustomJsonMappingExceptionMapper;
+import bsr.server.providers.CustomJsonProcessingExceptionMapper;
+import bsr.server.providers.CustomUnrecognizedPropertyExceptionMapper;
+import bsr.server.utils.BasicAuthUtil;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import bsr.server.database.DatabaseHandler;
 import bsr.server.innerServices.UserService;
@@ -35,14 +40,19 @@ public class Server {
     private static void initializeServerAndRESTPort() {
         URI baseUri = UriBuilder.fromUri("http://" + Config.SERVER_ADDR).port(Config.SERVER_PORT_REST).build();
         ResourceConfig config = new ResourceConfig()
+                .register(AccountResource.class)
+                .register(BasicAuthUtil.class)
                 .register(JacksonJaxbJsonProvider.class);
+//                .register(CustomJsonMappingExceptionMapper.class)
+//                .register(CustomJsonProcessingExceptionMapper.class)
+//                .register(CustomUnrecognizedPropertyExceptionMapper.class);
         serverInstance = GrizzlyHttpServerFactory.createHttpServer(baseUri, config, false);
     }
 
     private static void initializeSOAPServer() {
         NetworkListener networkListener = new NetworkListener("jaxws-listener", "0.0.0.0", Config.SERVER_PORT_SOAP);
         serverInstance.getServerConfiguration().addHttpHandler(new JaxwsHandler(new UserService()), "/users");
-        serverInstance.getServerConfiguration().addHttpHandler(new JaxwsHandler(new AccountService()), "/accounts");
+        serverInstance.getServerConfiguration().addHttpHandler(new JaxwsHandler(new AccountService()), "/internalAccounts");
 //        serverInstance.getServerConfiguration().addHttpHandler(new JaxwsHandler(new BankOperationService()), "/bankOperations");
         serverInstance.addListener(networkListener);
     }

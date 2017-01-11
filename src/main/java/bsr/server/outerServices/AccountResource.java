@@ -1,19 +1,16 @@
 package bsr.server.outerServices;
 
 import bsr.server.database.DatabaseHandler;
-import bsr.server.exceptions.AccountServiceException;
-import bsr.server.exceptions.NotValidException;
 import bsr.server.exceptions.OperationException;
 import bsr.server.models.Account;
 import bsr.server.models.accountOperations.Transfer;
 import org.mongodb.morphia.Datastore;
 
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.HashMap;
-import java.util.Map;
+
+import static com.sun.tools.doclets.formats.html.markup.HtmlStyle.title;
 
 /**
  * Created by Impresyjna on 11.01.2017.
@@ -26,7 +23,10 @@ public class AccountResource {
     @Path("/{accountNumber}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response makeTransfer(@PathParam("accountNumber") final String accountNumber, @NotNull String from, @NotNull String title, @NotNull int amount) {
+    public Response makeTransfer(@PathParam("accountNumber") final String accountNumber, Transfer transfer) {
+        String from = transfer.getSourceAccountNumber();
+        String title = transfer.getTitle();
+        int amount = transfer.getAmount();
         validateParams(from, title, amount);
 
         if (amount < 0 ){
@@ -70,12 +70,12 @@ public class AccountResource {
             invalidFields += "from";
         }
 
-        if (title == null || title.length() == 0 || title.matches(".*\\w.*")) {
+        if (title == null || title.length() == 0 || !title.matches(".*\\w.*")) {
             invalidFields += "title";
         }
 
         if(invalidFields.length() > 0) {
-            invalidFields = invalidFields.substring(0, invalidFields.length() -1);
+            invalidFields = invalidFields.substring(0, invalidFields.length());
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("{\n" +
                     "  \"error\": \"" + invalidFields + " invalid\"\n" +
                     "}").build());
