@@ -6,6 +6,7 @@ import bsr.server.exceptions.*;
 import bsr.server.models.Account;
 import bsr.server.models.User;
 import bsr.server.models.accountOperations.*;
+import bsr.server.outerServices.SendTransferToOtherBank;
 import bsr.server.properties.BanksMap;
 import bsr.server.properties.Config;
 import org.mongodb.morphia.Datastore;
@@ -17,6 +18,7 @@ import javax.jws.WebService;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.ws.BindingType;
 import javax.xml.ws.WebServiceContext;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,7 +123,7 @@ public class AccountService {
     public Operation transferMoney(@WebParam(name = "title") @XmlElement(required = true) final String title,
                                    @WebParam(name = "amount") @XmlElement(required = true) final String amount,
                                    @WebParam(name = "sourceAccountNumber") @XmlElement(required = true) final String sourceAccountNumber,
-                                   @WebParam(name = "targetAccountNumber") @XmlElement(required = true) final String targetAccountNumber) throws NotValidException, SessionException, UserException, AccountServiceException, OperationException, AccountException {
+                                   @WebParam(name = "targetAccountNumber") @XmlElement(required = true) final String targetAccountNumber) throws NotValidException, SessionException, UserException, AccountServiceException, OperationException, AccountException, IOException {
         Map<String, Object> parametersMap = new HashMap<String, Object>() {{
             put("targetAccountNumber", targetAccountNumber);
             put("sourceAccountNumber", sourceAccountNumber);
@@ -160,8 +162,21 @@ public class AccountService {
         return fromSourceAccountTransfer;
     }
 
-    private void outerTransfer(String targetAccountNumber, Account sourceAccount, Transfer fromSourceAccountTransfer) {
+    private void outerTransfer(String targetAccountNumber, Account sourceAccount, Transfer fromSourceAccountTransfer) throws AccountServiceException, OperationException, IOException {
         String bankIdentifier = targetAccountNumber.substring(2,10);
+        Map<String, String> banksMap = BanksMap.getInstance().getBankIpMap();
+
+        if(!banksMap.containsKey(bankIdentifier)) {
+            throw new AccountServiceException("Unknown target bank");
+        }
+
+        fromSourceAccountTransfer.doOperation(sourceAccount);
+
+        boolean requestSuccess = new SendTransferToOtherBank().makeRequest(banksMap.get(bankIdentifier), targetAccountNumber, sourceAccount.getAccountNumber(), fromSourceAccountTransfer.getTitle(), fromSourceAccountTransfer.getAmount());
+
+        if(requestSuccess) {
+            mongoDataStore.save(sourceAccount);
+        }
     }
 
     private void innerTransfer(Account sourceAccount, Account targetAccount, Transfer fromSourceTransfer, Transfer toTargetTransfer) throws OperationException, AccountException {

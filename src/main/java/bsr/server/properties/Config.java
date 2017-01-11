@@ -10,4 +10,6 @@ public abstract class Config {
     public static final int SERVER_PORT_REST = 8079;
     public static final int MONGODB_PORT = 8078;
     public static final String BANK_TO_IP_FILE_PATH = "banksIpList.txt";
+    public static final String AUTH_BANK_USERNAME = "admin";
+    public static final String AUTH_BANK_PASSWORD = "admin";
 }

@@ -41,13 +41,6 @@ public class DatabaseHandler {
             new DatabaseConfig().initDatabase();
         }
         System.out.println("Opened bsr.server.database successfully");
-        Map<String, String> banksMap = BanksMap.getInstance().getBankIpMap();
-        Iterator it = banksMap.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            System.out.println(pair.getKey() + " = " + pair.getValue());
-            it.remove(); // avoids a ConcurrentModificationException
-        }
     }
 
     public Datastore getMongoDataStore() {
