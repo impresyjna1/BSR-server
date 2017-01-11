@@ -6,6 +6,7 @@ import bsr.server.exceptions.*;
 import bsr.server.models.Account;
 import bsr.server.models.User;
 import bsr.server.models.accountOperations.*;
+import bsr.server.properties.BanksMap;
 import bsr.server.properties.Config;
 import org.mongodb.morphia.Datastore;
 
@@ -154,13 +155,13 @@ public class AccountService {
         } else if (targetAccount == null && targetAccountNumber.substring(2,10).equals(Config.BANK_ID)){
             throw new AccountException("Account doesn't exists");
         } else {
-            outerTransfer();
+            outerTransfer(targetAccountNumber, sourceAccount, fromSourceAccountTransfer);
         }
         return fromSourceAccountTransfer;
     }
 
-    private void outerTransfer() {
-
+    private void outerTransfer(String targetAccountNumber, Account sourceAccount, Transfer fromSourceAccountTransfer) {
+        String bankIdentifier = targetAccountNumber.substring(2,10);
     }
 
     private void innerTransfer(Account sourceAccount, Account targetAccount, Transfer fromSourceTransfer, Transfer toTargetTransfer) throws OperationException, AccountException {
