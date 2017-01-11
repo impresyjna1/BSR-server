@@ -37,7 +37,6 @@ public class AccountService {
 
     @WebMethod
     public List<Account> getAccounts() throws SessionException, UserException {
-        //TODO:
         User user = AuthSessionFromDatabaseUtil.getUserFromWebServiceContext(context);
         if (user != null) {
             return user.getAccounts();
@@ -49,7 +48,7 @@ public class AccountService {
     @WebMethod
     public Operation depositMoney(@WebParam(name = "title") @XmlElement(required = true) final String title,
                                   @WebParam(name = "amount") @XmlElement(required = true) final String amount,
-                                  @WebParam(name = "targetAccountNumber") @XmlElement(required = true) final String targetAccountNumber) throws NotValidException, SessionException, UserException, OperationException {
+                                  @WebParam(name = "targetAccountNumber") @XmlElement(required = true) final String targetAccountNumber) throws NotValidException, SessionException, UserException, OperationException, AccountException, AccountServiceException {
         Map<String, Object> parametersMap = new HashMap<String, Object>() {{
             put("title", title);
             put("amount", amount);
@@ -63,7 +62,9 @@ public class AccountService {
                 .equal(targetAccountNumber)
                 .get();
 
-        //TODO: throw here
+        if(targetAccount == null) {
+            throw new AccountServiceException("Account not found");
+        }
 
         Deposit deposit = new Deposit(title, (int) (Integer.parseInt(amount)), targetAccountNumber);
         deposit.doOperation(targetAccount);
@@ -74,7 +75,7 @@ public class AccountService {
     @WebMethod
     public Operation withdrawMoney(@WebParam(name = "title") @XmlElement(required = true) final String title,
                                    @WebParam(name = "amount") @XmlElement(required = true) final String amount,
-                                   @WebParam(name = "targetAccountNumber") @XmlElement(required = true) final String targetAccountNumber) throws NotValidException, SessionException, UserException, OperationException {
+                                   @WebParam(name = "targetAccountNumber") @XmlElement(required = true) final String targetAccountNumber) throws NotValidException, SessionException, UserException, OperationException, AccountException, AccountServiceException {
         Map<String, Object> parametersMap = new HashMap<String, Object>() {{
             put("title", title);
             put("amount", amount);
@@ -88,7 +89,9 @@ public class AccountService {
                 .equal(targetAccountNumber)
                 .get();
 
-        //TODO: throw here
+        if(targetAccount == null) {
+            throw new AccountServiceException("Account not found");
+        }
 
         Withdraw withdraw = new Withdraw(title, (int) (Integer.parseInt(amount)), targetAccountNumber);
         withdraw.doOperation(targetAccount);
@@ -213,7 +216,7 @@ public class AccountService {
                 }
             } else if (param.getKey().contains("AccountNumber")) {
                 String value = (String) param.getValue();
-                if (value.length() != 26 || value.matches("\\d+")) {
+                if (value.length() != 26 || !value.matches("\\d+")) {
                     exceptionMessage += param.getKey() + " ";
                 }
             }

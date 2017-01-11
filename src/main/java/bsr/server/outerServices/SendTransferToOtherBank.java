@@ -48,6 +48,7 @@ public class SendTransferToOtherBank {
 
         int status = connection.getResponseCode();
         boolean requestSuccess = false;
+        //TODO: Handle server error response
         switch (status) {
             case 404:
                 throw new AccountServiceException("Account not found");
