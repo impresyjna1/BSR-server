@@ -9,6 +9,7 @@ import bsr.server.models.accountOperations.*;
 import bsr.server.outerServices.SendTransferToOtherBank;
 import bsr.server.properties.BanksMap;
 import bsr.server.properties.Config;
+import bsr.server.utils.AccountNumberAuthUtil;
 import org.mongodb.morphia.Datastore;
 
 import javax.annotation.Resource;
@@ -100,11 +101,15 @@ public class AccountService {
     }
 
     @WebMethod
-    public Operation getBankFeeFromAccount(@WebParam(name = "targetAccountNumber") @XmlElement(required = true) final String targetAccountNumber) throws NotValidException, SessionException, UserException, OperationException, AccountServiceException {
+    public Operation getBankFeeFromAccount(@WebParam(name = "targetAccountNumber") @XmlElement(required = true) final String targetAccountNumber) throws NotValidException, SessionException, UserException, OperationException, AccountServiceException, AccountChecksumException {
         Map<String, Object> parametersMap = new HashMap<String, Object>() {{
             put("targetAccountNumber", targetAccountNumber);
         }};
         validateParams(parametersMap);
+
+        if(!AccountNumberAuthUtil.checkChecksum(targetAccountNumber)) {
+            throw new AccountChecksumException("Checksum not valid");
+        }
 
         User user = AuthSessionFromDatabaseUtil.getUserFromWebServiceContext(context);
         Account targetAccount = mongoDataStore.find(Account.class)
@@ -134,7 +139,8 @@ public class AccountService {
             put("title", title);
         }};
         validateParams(parametersMap);
-        if (sourceAccountNumber.equals(targetAccountNumber)) {
+
+        if (!sourceAccountNumber.equals(targetAccountNumber)) {
             throw new AccountServiceException("Can not transfer for same account");
         }
         User user = AuthSessionFromDatabaseUtil.getUserFromWebServiceContext(context);

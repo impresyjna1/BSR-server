@@ -4,6 +4,7 @@ import bsr.server.database.DatabaseHandler;
 import bsr.server.exceptions.OperationException;
 import bsr.server.models.Account;
 import bsr.server.models.accountOperations.Transfer;
+import bsr.server.utils.AccountNumberAuthUtil;
 import org.mongodb.morphia.Datastore;
 
 import javax.ws.rs.*;
@@ -66,7 +67,7 @@ public class AccountResource {
             invalidFields += "amount";
         }
 
-        if (from == null || !from.matches("\\d+") || from.length()!=26) {
+        if (from == null || !from.matches("\\d+") || from.length()!=26 || !AccountNumberAuthUtil.checkChecksum(from)) {
             invalidFields += "from";
         }
 

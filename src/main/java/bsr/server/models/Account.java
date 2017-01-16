@@ -3,6 +3,7 @@ package bsr.server.models;
 import bsr.server.database.DatabaseHandler;
 import bsr.server.models.accountOperations.Operation;
 import bsr.server.properties.Config;
+import bsr.server.utils.AccountNumberAuthUtil;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.annotations.Embedded;
@@ -122,14 +123,16 @@ public class Account {
         accountCounter.incrementNumber();
 
         String accountNo = Config.BANK_ID + String.format("%016d", accountCounter.getAccountNumber());
-        String tmpNo = accountNo + "101100";
-        String part1 = tmpNo.substring(0, 15);
-        String part2 = tmpNo.substring(15);
-        long rest1 = Long.parseLong(part1) % 97;
-        long rest2 = Long.parseLong(rest1 + part2) % 97;
-        long checkSum = 98 - rest2;
-
-        accountNo = String.format("%02d", checkSum) + accountNo;
+//        String tmpNo = accountNo + "101100";
+//        String part1 = tmpNo.substring(0, 15);
+//        String part2 = tmpNo.substring(15);
+//        long rest1 = Long.parseLong(part1) % 97;
+//        long rest2 = Long.parseLong(rest1 + part2) % 97;
+//        long checkSum = 98 - rest2;
+//
+//        accountNo = String.format("%02d", checkSum) + accountNo;
+        System.out.println(accountNo);
+        accountNo = AccountNumberAuthUtil.calculateChecksum(accountNo);
         System.out.println(accountNo);
 
 
