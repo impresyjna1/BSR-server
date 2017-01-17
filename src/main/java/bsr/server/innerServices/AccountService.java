@@ -67,7 +67,7 @@ public class AccountService {
             throw new AccountServiceException("Account not found");
         }
 
-        Deposit deposit = new Deposit(title, (int) (Integer.parseInt(amount)), targetAccountNumber);
+        Deposit deposit = new Deposit(title, parseIntFromString(amount), targetAccountNumber);
         deposit.doOperation(targetAccount);
         mongoDataStore.save(targetAccount);
         return deposit;
@@ -94,7 +94,7 @@ public class AccountService {
             throw new AccountServiceException("Account not found");
         }
 
-        Withdraw withdraw = new Withdraw(title, (int) (Integer.parseInt(amount)), targetAccountNumber);
+        Withdraw withdraw = new Withdraw(title, parseIntFromString(amount), targetAccountNumber);
         withdraw.doOperation(targetAccount);
         mongoDataStore.save(targetAccount);
         return withdraw;
@@ -159,9 +159,9 @@ public class AccountService {
             throw new AccountException("Source account doesn't exists");
         }
 
-        Transfer fromSourceAccountTransfer = new Transfer(title, Integer.parseInt(amount), targetAccountNumber, Transfer.TransferEnum.OUT, sourceAccountNumber);
+        Transfer fromSourceAccountTransfer = new Transfer(title, parseIntFromString(amount), targetAccountNumber, Transfer.TransferEnum.OUT, sourceAccountNumber);
         if (targetAccount != null) {
-            Transfer toTargetAccountTransfer = new Transfer(title, Integer.parseInt(amount), targetAccountNumber, Transfer.TransferEnum.IN, sourceAccountNumber);
+            Transfer toTargetAccountTransfer = new Transfer(title, parseIntFromString(amount), targetAccountNumber, Transfer.TransferEnum.IN, sourceAccountNumber);
             innerTransfer(sourceAccount, targetAccount, fromSourceAccountTransfer, toTargetAccountTransfer);
         } else if (targetAccount == null && targetAccountNumber.substring(2,10).equals(Config.BANK_ID)){
             throw new AccountException("Account doesn't exists");
@@ -206,23 +206,26 @@ public class AccountService {
     private void validateParams(Map<String, Object> paramsMap) throws NotValidException {
         String exceptionMessage = "";
         for (Map.Entry<String, Object> param : paramsMap.entrySet()) {
-            if (param.getValue() instanceof String) {
-                String value = (String) param.getValue();
-                if (value.length() == 0) {
-                    exceptionMessage += param.getKey() + " ";
-                }
-            } else if (param.getKey() == "amount") {
+            if (param.getKey().contains("amount")) {
                 try {
-                    double amount = Double.parseDouble(String.valueOf(param));
+                    String amountString = (String) param.getValue();
+                    amountString = amountString.replace(",", ".");
+                    double amount = Double.parseDouble(String.valueOf(amountString));
                     if (amount <= 0) {
                         exceptionMessage += param.getKey() + " ";
                     }
                 } catch (Exception e) {
+                    System.out.println("Exception");
                     exceptionMessage += param.getKey() + " ";
                 }
             } else if (param.getKey().contains("AccountNumber")) {
                 String value = (String) param.getValue();
                 if (value.length() != 26 || !value.matches("\\d+")) {
+                    exceptionMessage += param.getKey() + " ";
+                }
+            } else if (param.getValue() instanceof String) {
+                String value = (String) param.getValue();
+                if (value.length() == 0) {
                     exceptionMessage += param.getKey() + " ";
                 }
             }
@@ -231,5 +234,12 @@ public class AccountService {
             exceptionMessage += " is missing or is invalid";
             throw new NotValidException(exceptionMessage);
         }
+    }
+
+    private int parseIntFromString(String amount) {
+        String amountString = amount.replace(",", ".");
+        double amountDouble = Double.parseDouble(String.valueOf(amountString));
+
+        return (int) (amountDouble*100);
     }
 }
