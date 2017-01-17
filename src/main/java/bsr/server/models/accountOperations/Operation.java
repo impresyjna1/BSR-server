@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.*;
  * Created by Impresyjna on 01.01.2017.
  */
 @Embedded
-@XmlSeeAlso({Deposit.class})
+@XmlSeeAlso({Deposit.class, Transfer.class, Withdraw.class, BankFee.class})
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "operation")
 public abstract class Operation {
