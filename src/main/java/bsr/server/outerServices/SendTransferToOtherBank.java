@@ -48,6 +48,7 @@ public class SendTransferToOtherBank {
         requestBody.close();
         connection.connect();
 
+        System.out.println(connection.getResponseCode());
         int status = connection.getResponseCode();
         boolean requestSuccess = false;
         //TODO: Handle server error response
