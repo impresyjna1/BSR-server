@@ -140,9 +140,10 @@ public class AccountService {
         }};
         validateParams(parametersMap);
 
-        if (!sourceAccountNumber.equals(targetAccountNumber)) {
+        if (sourceAccountNumber.equals(targetAccountNumber)) {
             throw new AccountServiceException("Can not transfer for same account");
         }
+
         User user = AuthSessionFromDatabaseUtil.getUserFromWebServiceContext(context);
 
         Account sourceAccount = mongoDataStore.find(Account.class)
