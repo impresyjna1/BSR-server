@@ -11,8 +11,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import static com.sun.tools.doclets.formats.html.markup.HtmlStyle.title;
-
 /**
  * Created by Impresyjna on 11.01.2017.
  */

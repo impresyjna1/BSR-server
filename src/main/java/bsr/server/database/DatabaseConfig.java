@@ -96,4 +96,17 @@ public class DatabaseConfig {
         initAccounts();
         mongoDataStore.save(users);
     }
+
+    public void initBsrUser() {
+        Datastore mongoDataStore = DatabaseHandler.getInstance().getMongoDataStore();
+        User user5 = new User("Bsr", "Bsr", "666666", "bsr1");
+        Account account1 = new Account("A", 500);
+        Account account2 = new Account("B", 100);
+        ArrayList<Account> accounts = new ArrayList<>();
+        accounts.add(account1);
+        accounts.add(account2);
+        mongoDataStore.save(accounts);
+        user5.setAccounts(accounts);
+        mongoDataStore.save(user5);
+    }
 }

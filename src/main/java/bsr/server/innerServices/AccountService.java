@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Created by Impresyjna on 01.01.2017.
@@ -197,6 +198,8 @@ public class AccountService {
                                    @WebParam(name = "amount") @XmlElement(required = true) final String amount,
                                    @WebParam(name = "sourceAccountNumber") @XmlElement(required = true) final String sourceAccountNumber,
                                    @WebParam(name = "targetAccountNumber") @XmlElement(required = true) final String targetAccountNumber) throws NotValidException, SessionException, UserException, AccountServiceException, OperationException, AccountException, IOException, TaxInspectorException {
+        System.out.println(title);
+        System.out.println(amount);
         Map<String, Object> parametersMap = new HashMap<String, Object>() {{
             put("targetAccountNumber", targetAccountNumber);
             put("sourceAccountNumber", sourceAccountNumber);
@@ -300,8 +303,11 @@ public class AccountService {
                 try {
                     String amountString = (String) param.getValue();
                     amountString = amountString.replace(",", ".");
+                    System.out.println(amountString);
+                    String[] parts = amountString.split(Pattern.quote("."));
+                    System.out.println(parts[1]);
                     double amount = Double.parseDouble(String.valueOf(amountString));
-                    if (amount <= 0) {
+                    if (amount <= 0 || parts[1].length()>2) {
                         exceptionMessage += param.getKey() + " ";
                     } else if (amount > 100000000) {
                         throw new TaxInspectorException("Tax inspector will contact you if you use that amount");
@@ -317,7 +323,8 @@ public class AccountService {
                 }
             } else if (param.getValue() instanceof String) {
                 String value = (String) param.getValue();
-                if (value.length() == 0 || !value.matches(".*\\w.*")) {
+                value = value.replace("\\s", "");
+                if (value.length() == 0) {
                     exceptionMessage += param.getKey() + " ";
                 }
             }
