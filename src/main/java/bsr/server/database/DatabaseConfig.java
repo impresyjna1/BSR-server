@@ -1,19 +1,24 @@
 package bsr.server.database;
 
 import bsr.server.models.Account;
-import bsr.server.models.AccountCounter;
 import bsr.server.models.User;
 import org.mongodb.morphia.Datastore;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
  * Created by Impresyjna on 28.12.2016.
  */
+
+/**
+ * Class with configuration when database is empty
+ */
 public class DatabaseConfig {
     private ArrayList<User> users = new ArrayList<User>();
 
+    /**
+     * Method with all users initialized
+     */
     public void initUsers() {
         User user1 = new User("Alicja", "Grzyb", "111111", "grzyb");
         User user2 = new User("Krzysztof", "Kowalski", "222222", "kowalski");
@@ -27,6 +32,9 @@ public class DatabaseConfig {
         users.add(user5);
     }
 
+    /**
+     * Method with all accounts initialized
+     */
     public void initAccounts() {
         Datastore mongoDataStore = DatabaseHandler.getInstance().getMongoDataStore();
 
@@ -79,6 +87,9 @@ public class DatabaseConfig {
         user.setAccounts(accounts);
     }
 
+    /**
+     * Method to initialize all objects in database
+     */
     public void initDatabase() {
         Datastore mongoDataStore = DatabaseHandler.getInstance().getMongoDataStore();
         initUsers();

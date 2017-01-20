@@ -3,6 +3,11 @@ package bsr.server.properties;
 /**
  * Created by Impresyjna on 27.12.2016.
  */
+
+/**
+ * Class with configuration
+ * Contains address for service, bank id, password for basic auth, ports for services and path to file with addresses and bank ids
+ */
 public abstract class Config {
     public static final String BANK_ID = "00109708";
     public static final String SERVER_ADDR = "localhost";

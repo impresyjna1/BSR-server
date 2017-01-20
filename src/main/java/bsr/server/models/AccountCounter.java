@@ -9,6 +9,11 @@ import javax.validation.constraints.NotNull;
 /**
  * Created by Impresyjna on 29.12.2016.
  */
+
+/**
+ * Model needed to create accounts counter and save that value in database. After creating each account value for only
+ * one entity of this model incremented
+ */
 @Entity("accounts_counter")
 public class AccountCounter {
     @Id

@@ -10,10 +10,17 @@ import java.util.Map;
 /**
  * Created by Impresyjna on 11.01.2017.
  */
+
+/**
+ * Singleton class with map to banks read from file
+ */
 public class BanksMap {
     private static BanksMap instance = new BanksMap();
     private Map<String, String> bankIpMap;
 
+    /**
+     * Constructor reads bank ids and addresses and make it in map form
+     */
     private BanksMap() {
         bankIpMap = new HashMap<>();
 

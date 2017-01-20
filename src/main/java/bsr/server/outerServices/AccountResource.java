@@ -16,10 +16,20 @@ import static com.sun.tools.doclets.formats.html.markup.HtmlStyle.title;
 /**
  * Created by Impresyjna on 11.01.2017.
  */
+
+/**
+ * Class with method to serve REST connection with bank
+ */
 @Path("/accounts")
 public class AccountResource {
     private Datastore mongoDataStore = DatabaseHandler.getInstance().getMongoDataStore();
 
+    /**
+     * Method called when user send POST request to bank address on REST port e.g. localhost:8080/12345678901234567890123456
+     * @param accountNumber Param from address where to transfer money
+     * @param transfer Object to what parse given json
+     * @return Response with code if success, otherwise WebApplicationException with code and message
+     */
     @POST
     @Path("/{accountNumber}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -60,10 +70,16 @@ public class AccountResource {
         return Response.created(null).build();
     }
 
+    /**
+     * Method to validate params
+     * @param from Account number from transfer is made, checks if is not null, contains only digits, length is 26 and checksum is valid
+     * @param title Title of transfer, checks if is not null, length is more than 0 and contains other letters than white signs
+     * @param amount Amount of transfer in pennies, checks if amount is more than 0 so transfer can be made
+     */
     private void validateParams(String from, String title, int amount) {
         String invalidFields = "";
 
-        if (amount == 0) {
+        if (amount <= 0) {
             invalidFields += "amount";
         }
 

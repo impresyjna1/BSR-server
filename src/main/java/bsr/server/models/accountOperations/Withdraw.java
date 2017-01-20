@@ -8,6 +8,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * Created by Impresyjna on 08.01.2017.
  */
+
+/**
+ * Model to withdraw operation to execute it. Needed for command pattern
+ */
 @XmlRootElement(name = "withdraw")
 public class Withdraw extends Operation {
 
@@ -18,6 +22,11 @@ public class Withdraw extends Operation {
         super(title, amount, targetAccountNumber);
     }
 
+    /**
+     * Method to withdraw money from account
+     * @param account Account to withdraw money
+     * @throws OperationException If amount is less than balance throw exception
+     */
     @Override
     protected void execute(Account account) throws OperationException {
 

@@ -20,6 +20,10 @@ import java.util.*;
 /**
  * Created by Impresyjna on 27.12.2016.
  */
+
+/**
+ * WebService for user operations for internal bank use
+ */
 @WebService
 @BindingType(value = javax.xml.ws.soap.SOAPBinding.SOAP12HTTP_BINDING)
 public class UserService {
@@ -28,10 +32,18 @@ public class UserService {
 
     Datastore mongoDataStore = DatabaseHandler.getInstance().getMongoDataStore();
 
+    /**
+     * Login service
+     * @param clientNumber Client number e.g 111111
+     * @param password Client password to auth if checks with client number
+     * @return sessionId given by server
+     * @throws AuthException Exception when user with given client number and client password doesn't exists
+     * @throws NotValidException Exception when client number or password invalid
+     */
     @WebMethod
     public int login(@WebParam(name = "clientNumber") @XmlElement(required = true) final String clientNumber,
                         @WebParam(name = "password") @XmlElement(required = true) final String password)
-            throws AuthException, NotValidException, ServerException {
+            throws AuthException, NotValidException {
         Map<String, Object> userParamsMap = new HashMap<String, Object>() {{
             put("clientNumber", clientNumber);
             put("password", password);
@@ -51,6 +63,12 @@ public class UserService {
         }
     }
 
+    /**
+     * Method to get user for sessionId in web context
+     * @return User from database connected with sessionId
+     * @throws SessionException Exception thrown when user is not logged in or session has expired
+     * @throws UserException Exception thrown when user assigned to session not exists anymore
+     */
     @WebMethod
     public User getUser() throws SessionException, UserException {
         User user = AuthSessionFromDatabaseUtil.getUserFromWebServiceContext(context);
@@ -58,12 +76,18 @@ public class UserService {
         return user;
     }
 
+    /**
+     * Method validating given in map params
+     * @param paramsMap Params in map, key is name of param, value is the value of param
+     * @throws NotValidException When one param not valid throw exception with message
+     */
     private void validateParams(Map<String, Object> paramsMap) throws NotValidException {
         String exceptionMessage = "";
         for(Map.Entry<String, Object> param: paramsMap.entrySet()) {
             if(param.getValue() instanceof String) {
                 String value = (String)param.getValue();
-                if(value.length() == 0) {
+
+                if(value.length() == 0 || !value.matches(".*\\w.*")) {
                     exceptionMessage += param.getKey() + " ";
                 }
             }

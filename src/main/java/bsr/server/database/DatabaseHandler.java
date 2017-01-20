@@ -1,19 +1,18 @@
 package bsr.server.database;
 import bsr.server.models.AccountCounter;
-import bsr.server.models.Session;
 import bsr.server.models.SessionCounter;
 import bsr.server.models.User;
-import bsr.server.properties.BanksMap;
 import bsr.server.properties.Config;
 import com.mongodb.MongoClient;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
-import java.util.Iterator;
-import java.util.Map;
-
 /**
  * Created by Impresyjna on 27.12.2016.
+ */
+
+/**
+ * Singleton class to handle instance od Datastore to MongoDB
  */
 public class DatabaseHandler {
     private static DatabaseHandler ourInstance = new DatabaseHandler();
@@ -25,6 +24,9 @@ public class DatabaseHandler {
     private DatabaseHandler() {
     }
 
+    /**
+     * Method initializing connection to database on given address and port. Initialize objects if database empty
+     */
     public void initDatabase() {
         final Morphia morphia = new Morphia();
         mongoDataStore = morphia.createDatastore(new MongoClient("localhost", Config.MONGODB_PORT), "bank");

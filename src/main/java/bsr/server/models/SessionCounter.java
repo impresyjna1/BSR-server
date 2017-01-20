@@ -9,6 +9,11 @@ import javax.validation.constraints.NotNull;
 /**
  * Created by Impresyjna on 04.01.2017.
  */
+
+/**
+ * Model of session counter needed to save counter of sessions in database
+ * Incremented after creating new session for user after login
+ */
 @Entity("sessions_counter")
 public class SessionCounter {
     @Id

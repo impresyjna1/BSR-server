@@ -9,9 +9,16 @@ import javax.xml.bind.annotation.*;
 /**
  * Created by Impresyjna on 08.01.2017.
  */
+
+/**
+ * Class for transfer operation.
+ */
 @XmlRootElement(name = "transfer")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Transfer extends Operation{
+    /**
+     * Enum for transfer. If in that means coming transfer, out means withdraw money from account
+     */
     public enum TransferEnum {
         IN, OUT
     }
@@ -48,6 +55,11 @@ public class Transfer extends Operation{
         this.sourceAccountNumber = sourceAccountNumber;
     }
 
+    /**
+     * Executes method to transfer money to or from account - depends on given transferType
+     * @param account Account to execute operation
+     * @throws OperationException Exception when OUT transfer and not enough money to make this operation
+     */
     @Override
     protected void execute(Account account) throws OperationException {
         if(transferType == TransferEnum.IN) {

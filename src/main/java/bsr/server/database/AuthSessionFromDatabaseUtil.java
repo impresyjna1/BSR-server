@@ -7,14 +7,24 @@ import bsr.server.models.User;
 
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 
 /**
  * Created by Impresyjna on 01.01.2017.
  */
+
+/**
+ * Abstract class with methods to get user for auth session
+ */
 public abstract class AuthSessionFromDatabaseUtil {
+
+    /**
+     * Method to get sessionId from WebService context
+     * @param context WebServicr context for request. Contains sessionId
+     * @return Got from context sessionId
+     * @throws SessionException Exception thrown when sessionId is not in context
+     */
     public static String getSessionIdFromWebServiceContext(WebServiceContext context) throws SessionException {
         Map headers = (Map) context.getMessageContext().get(MessageContext.HTTP_REQUEST_HEADERS);
         ArrayList sessionId = (ArrayList) headers.get("sessionId");
@@ -25,6 +35,12 @@ public abstract class AuthSessionFromDatabaseUtil {
         return (String) sessionId.get(0);
     }
 
+    /**
+     * Method to get session object from database on the grounds of WebServiceContext
+     * @param context WebServicr context for request. Contains sessionId
+     * @return Got from database session object
+     * @throws SessionException Exception thrown when user is not logged in or session has expired
+     */
     public static Session getSessionFromWebServiceContext(WebServiceContext context) throws SessionException {
         String sessionId = getSessionIdFromWebServiceContext(context);
         Session session = DatabaseHandler.getInstance().getMongoDataStore()
@@ -37,6 +53,13 @@ public abstract class AuthSessionFromDatabaseUtil {
         return session;
     }
 
+    /**
+     * Method to get user from database on the grounds of WebServiceContext
+     * @param context WebServicr context for request. Contains sessionId
+     * @return Got from database user object
+     * @throws UserException Exception thrown when user assigned to session not exists anymore
+     * @throws SessionException Exception thrown when user is not logged in or session has expired or sessionId is not in context
+     */
     public static User getUserFromWebServiceContext(WebServiceContext context) throws UserException, SessionException {
         Session session = getSessionFromWebServiceContext(context);
         User user = session.getUser();

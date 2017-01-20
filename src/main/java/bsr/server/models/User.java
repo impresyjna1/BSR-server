@@ -16,6 +16,10 @@ import java.util.List;
 /**
  * Created by Impresyjna on 27.12.2016.
  */
+
+/**
+ * Model of user
+ */
 @Entity("users")
 public class User {
     @Id
@@ -91,6 +95,11 @@ public class User {
         this.accounts = accounts;
     }
 
+    /**
+     * Hash password to save this in database
+     * @param password Password in plain text
+     * @return Hashed in MD5 password
+     */
     private String hashPassword(String password) {
         String generatedPassword = null;
         try {

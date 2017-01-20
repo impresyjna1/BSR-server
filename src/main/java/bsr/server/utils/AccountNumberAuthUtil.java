@@ -3,8 +3,17 @@ package bsr.server.utils;
 /**
  * Created by Impresyjna on 16.01.2017.
  */
+
+/**
+ * Abstract class with methods to generate checksum for account and check if account is valid
+ */
 public abstract class AccountNumberAuthUtil {
 
+    /**
+     * Calculates checksum
+     * @param number Account number without checksum
+     * @return Account number with checksum
+     */
     public static String calculateChecksum(String number){
         number = number.replace(" ", "");
         String nr = number + "252100";
@@ -20,6 +29,11 @@ public abstract class AccountNumberAuthUtil {
         }
     }
 
+    /**
+     * Validates account number
+     * @param number account number from service
+     * @return true is valid, false if invalid
+     */
     public static Boolean checkChecksum(String number){
         number = number.replace(" ", "");
         String nr = "";

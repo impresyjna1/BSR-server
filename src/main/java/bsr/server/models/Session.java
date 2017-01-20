@@ -15,6 +15,10 @@ import javax.validation.constraints.NotNull;
 /**
  * Created by Asia on 30.12.2016.
  */
+
+/**
+ * Session model
+ */
 @Entity("sessions")
 public class Session {
     @Id
@@ -31,6 +35,10 @@ public class Session {
     public Session() {
     }
 
+    /**
+     * For given user creates session and saves it in database
+     * @param user User to create session
+     */
     public Session(User user) {
         this.user = user;
         this.timestamp = Long.toString(System.currentTimeMillis());

@@ -12,6 +12,10 @@ import java.io.IOException;
 /**
  * Created by Impresyjna on 11.01.2017.
  */
+
+/**
+ * Class to handle basic auth while connecting to other bank
+ */
 public class BasicAuthUtil implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext containerRequestContext) throws IOException {

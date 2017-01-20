@@ -24,6 +24,10 @@ import java.util.List;
 /**
  * Created by Impresyjna on 27.12.2016.
  */
+
+/**
+ * Model for account in database and to use it in app
+ */
 @XmlSeeAlso({Operation.class})
 @Entity("accounts")
 public class Account {
